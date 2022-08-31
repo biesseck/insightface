@@ -8,3 +8,4 @@ argparse
 GPUtil
 pyhocon
 plotly
+cvxpy

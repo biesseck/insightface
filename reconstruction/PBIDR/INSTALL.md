@@ -22,6 +22,6 @@ cd pytorch3d-0.4.0 && pip install -e .
 #### Install Other Requirments
 
 ```bash
-pip install requirements.txt
+pip install -r requirements.txt
 ```
 

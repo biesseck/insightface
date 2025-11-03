@@ -1,0 +1,179 @@
+import os
+import sys
+import numpy as np
+from sklearn.preprocessing import normalize
+import argparse
+import re
+from glob import glob
+import copy
+
+
+
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--path_base_subj_embedds", type=str, default='/nobackup/unico/datasets/face_recognition/1_CASIA-WebFace/imgs_crops_112x112_FACE_EMBEDDINGS')
+    parser.add_argument("--substring_file_base_subj", type=str, default='_mean_embedding_')
+
+    parser.add_argument("--path_new_subjs_embedds", type=str, default='/nobackup/unico/datasets/face_recognition/MS-Celeb-1M/ms1m-retinaface-t1/imgs_FACE_EMBEDDINGS')
+    parser.add_argument("--substring_file_new_subj", type=str,  default='_mean_embedding_')
+
+    # parser.add_argument("--similarity_range", type=lambda s: [float(x) for x in s.strip('[]').split(',')], default='[0.0,0.3]')   # low similarity
+    parser.add_argument("--similarity_range", type=lambda s: [float(x) for x in s.strip('[]').split(',')], default='[0.7,1.0]')     # high similarity
+
+    args = parser.parse_args()
+
+    return args
+
+
+def _numeric_sort_key(path):
+    return [int(num) for num in re.findall(r'\d+', os.path.basename(path))]
+
+
+def find_files_paths(path_embedds, substring_file='_mean_embedding_'):
+    assert os.path.exists(path_embedds), f'Error: no such path or file \'{path_embedds}\''
+    
+    matched_files = []
+    count = 0
+
+    for root, _, files in os.walk(path_embedds):
+        for fname in files:
+            if substring_file in fname:
+                full_path = os.path.join(root, fname)
+                matched_files.append(full_path)
+                count += 1
+                print(f"    Found files: {count}", end="\r")
+    print()
+    matched_files.sort(key=_numeric_sort_key)
+    # print('matched_files:', matched_files)
+    # sys.exit(0)
+    return matched_files
+
+
+def load_one_embedding(file_path):
+    if '.npy' in os.path.splitext(file_path)[1]:
+        embedding = np.load(file_path)
+    return embedding
+
+
+def load_embeddings(base_subj_embedds_paths):
+    assert os.path.isfile(base_subj_embedds_paths[0]), f"Error, file not found \'{base_subj_embedds_paths[0]}\'"
+    one_embedding = load_one_embedding(base_subj_embedds_paths[0])
+    num_dims = one_embedding.shape[1] if len(one_embedding.shape) == 2 else one_embedding.shape[0]   # typically (1, 512)
+    all_embeddings = np.zeros((len(base_subj_embedds_paths), num_dims), dtype=one_embedding.dtype)
+    # print("    all_embeddings.shape:", all_embeddings.shape)
+    # sys.exit(0)
+    for idx_embedd_path, embedd_path in enumerate(base_subj_embedds_paths):
+        print(f"    {idx_embedd_path}/{len(base_subj_embedds_paths)} - Loading \'{embedd_path}\'", end="\r")
+        one_embedd = load_one_embedding(embedd_path)
+        all_embeddings[idx_embedd_path,:] = one_embedd
+        # print('all_embeddings:', all_embeddings)
+    print()
+    return all_embeddings
+
+
+def make_indices_chunks(total_size=93431, chunk_size=1000):
+    start_idx = 0
+    curr_end_idx = min(total_size, chunk_size)
+    chunk_indices = [[start_idx, curr_end_idx]]
+    while curr_end_idx < total_size:
+        start_idx = curr_end_idx
+        curr_end_idx = min(total_size, start_idx+chunk_size)
+
+        one_chunk = [start_idx, curr_end_idx]
+        chunk_indices.append(one_chunk)
+    # print('chunk_indices:', chunk_indices)
+    # sys.exit(0)
+    return chunk_indices
+
+
+def load_select_new_subjs_embedds(base_subj_embedds, new_subj_embedds_paths, similarity_range):
+    # base_subj_embedds = base_subj_embedds / np.linalg.norm(base_subj_embedds, axis=1, keepdims=True)
+    base_subj_embedds = normalize(base_subj_embedds, axis=1)
+
+    one_embedding = load_one_embedding(new_subj_embedds_paths[0])
+    num_dims = one_embedding.shape[1] if len(one_embedding.shape) == 2 else one_embedding.shape[0]   # typically (1, 512)
+
+    global_indices_selected_embedds = np.empty((0, 2), dtype=int)
+    
+    # chunk_size = 1000
+    # chunk_size = 5000
+    chunk_size = 10000
+
+    chunk_all_indices = make_indices_chunks(len(new_subj_embedds_paths), chunk_size)
+
+    global_idx_embedd_path = 0
+    for idx_chunk, chunk_idx in enumerate(chunk_all_indices):
+        # one_embedding = load_one_embedding(new_subj_embedds_paths[0])
+        # num_dims = one_embedding.shape[1] if len(one_embedding.shape) == 2 else one_embedding.shape[0]   # typically (1, 512)
+        shape_chunk_embedd = (chunk_idx[1]-chunk_idx[0], num_dims)
+        chunk_embeddings = np.zeros(shape_chunk_embedd, dtype=one_embedding.dtype)
+
+        for idx_embedd_path, embedd_path in enumerate(new_subj_embedds_paths[chunk_idx[0]:chunk_idx[1]]):
+            print(f"    chunk {idx_chunk}/{len(chunk_all_indices)} - chunk_idx: {chunk_idx} - chunk_embeddings.shape: {chunk_embeddings.shape} - global_idx_embedd: {global_idx_embedd_path}/{len(new_subj_embedds_paths)}", end='\r')
+            # print(f"        chunk_embeddings.shape: {chunk_embeddings.shape} - global_idx_embedd: {global_idx_embedd_path}/{len(new_subj_embedds_paths)}", end='\r')
+            one_embedd = load_one_embedding(embedd_path)
+            chunk_embeddings[idx_embedd_path,:] = one_embedd
+
+            global_idx_embedd_path += 1
+        print()
+
+        # chunk_embeddings = chunk_embeddings / np.linalg.norm(chunk_embeddings, axis=1, keepdims=True)
+        chunk_embeddings = normalize(chunk_embeddings, axis=1)
+        chunk_cossims = np.dot(chunk_embeddings, base_subj_embedds.T)
+        # print('chunk_cossims:', chunk_cossims)
+        # print('        chunk_cossims.shape:', chunk_cossims.shape)   # chunk_cossims.shape: (10000, 10572)
+
+        # SELECT EMBEDDS INTO THE RANGE similarity_range
+        mask = (chunk_cossims >= similarity_range[0]) & (chunk_cossims <= similarity_range[1])
+        chunk_local_indices = np.argwhere(mask)
+        # print('        chunk_local_indices:', chunk_local_indices)
+        # print('        chunk_local_indices.shape:', chunk_local_indices.shape)
+
+        chunk_global_indices = copy.deepcopy(chunk_local_indices)
+        chunk_global_indices[:,0] += (idx_chunk * chunk_size)
+        # print('        chunk_global_indices:', chunk_global_indices)
+        print('        chunk_global_indices.shape:', chunk_global_indices.shape)
+        # print('        chunk_global_indices.dtype:', chunk_global_indices.dtype)
+
+        global_indices_selected_embedds = np.vstack((global_indices_selected_embedds, chunk_global_indices))
+        print('        global_indices_selected_embedds.shape:', global_indices_selected_embedds.shape)
+        # print('        global_indices_selected_embedds.dtype:', global_indices_selected_embedds.dtype)
+
+    return global_indices_selected_embedds
+
+
+
+
+def main(args):
+    assert os.path.exists(args.path_base_subj_embedds), f'Error: no such path or file \'{args.path_base_subj_embedds}\''
+    assert os.path.exists(args.path_new_subjs_embedds), f'Error: no such path or file \'{args.path_new_subjs_embedds}\''
+
+
+    print('Loading base subjects embeddings...')
+    print(f"    {args.path_base_subj_embedds}")
+    base_subj_embedds_paths = find_files_paths(args.path_base_subj_embedds, args.substring_file_base_subj)
+    base_subj_embedds       = load_embeddings(base_subj_embedds_paths)
+    
+    print('\nLoading new subjects embeddings...')
+    print(f"    {args.path_new_subjs_embedds}")
+    new_subj_embedds_paths        = find_files_paths(args.path_new_subjs_embedds, args.substring_file_new_subj)
+    indices_2d_selected_new_subjs = load_select_new_subjs_embedds(base_subj_embedds, new_subj_embedds_paths, args.similarity_range)
+    indices_1d_selected_new_subjs = indices_2d_selected_new_subjs[:,0]
+
+    selected_new_subj_embedds_paths = [new_subj_embedds_paths[idx] for idx in indices_1d_selected_new_subjs]
+    print('\nlen(selected_new_subj_embedds_paths):', len(selected_new_subj_embedds_paths))
+
+    output_folder_name = f"merge_with_dataset_{'-'.join(args.path_new_subjs_embedds.split('/')[-3:])}_sim-range={args.similarity_range}".replace(' ','')
+    path_output_folder = os.path.join(os.path.dirname(args.path_base_subj_embedds), output_folder_name)
+    print(f"\npath_output_folder: \'{path_output_folder}\'")
+    os.makedirs(path_output_folder, exist_ok=True)
+
+    print('\nFinished!\n')
+
+
+
+if __name__ == '__main__':
+    args = parse_args()
+    
+    # chunk_idxs = make_indices_chunks(total_size=93431, chunk_size=10000)
+    main(args)

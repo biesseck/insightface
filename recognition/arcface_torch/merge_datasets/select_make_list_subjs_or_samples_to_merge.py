@@ -121,6 +121,7 @@ def load_select_new_subjs_embedds(base_subj_embedds, new_subj_embedds_paths, sim
     num_dims = one_embedding.shape[1] if len(one_embedding.shape) == 2 else one_embedding.shape[0]   # typically (1, 512)
 
     global_indices_selected_embedds = np.empty((0, 2), dtype=int)
+    global_cossims_selected_embedds = np.empty((0, 1), dtype=float)
     
     # chunk_size = 1000
     # chunk_size = 5000
@@ -153,6 +154,9 @@ def load_select_new_subjs_embedds(base_subj_embedds, new_subj_embedds_paths, sim
         # SELECT EMBEDDS INTO THE RANGE similarity_range
         mask = (chunk_cossims >= similarity_range[0]) & (chunk_cossims <= similarity_range[1])
         chunk_local_indices = np.argwhere(mask)
+        chunk_cossims_selected_embedds = np.zeros((len(chunk_local_indices),1), dtype=float)
+        for i in range(len(chunk_cossims_selected_embedds)):
+            chunk_cossims_selected_embedds[i] = chunk_cossims[chunk_local_indices[i,0],chunk_local_indices[i,1]]
         # print('        chunk_local_indices:', chunk_local_indices)
         # print('        chunk_local_indices.shape:', chunk_local_indices.shape)
 
@@ -163,18 +167,19 @@ def load_select_new_subjs_embedds(base_subj_embedds, new_subj_embedds_paths, sim
         # print('        chunk_global_indices.dtype:', chunk_global_indices.dtype)
 
         global_indices_selected_embedds = np.vstack((global_indices_selected_embedds, chunk_global_indices))
+        global_cossims_selected_embedds = np.vstack((global_cossims_selected_embedds, chunk_cossims_selected_embedds))
         print('        global_indices_selected_embedds.shape:', global_indices_selected_embedds.shape)
         # print('        global_indices_selected_embedds.dtype:', global_indices_selected_embedds.dtype)
 
-    return global_indices_selected_embedds
+    return global_indices_selected_embedds, global_cossims_selected_embedds
 
 
-def make_dict_new_subjs_base_subjs(new_subj_embedds_paths, base_subj_embedds_paths, indices_2d_selected_new_subjs):
+def make_dict_new_subjs_base_subjs(new_subj_embedds_paths, base_subj_embedds_paths, indices_2d_selected_new_subjs, cossims_selected_new_subjs):
     dict_paths_new_subjs_base_subjs = {}
-    for indices_2d in indices_2d_selected_new_subjs:
+    for i, indices_2d in enumerate(indices_2d_selected_new_subjs):
         if not new_subj_embedds_paths[indices_2d[0]] in dict_paths_new_subjs_base_subjs:
             dict_paths_new_subjs_base_subjs[new_subj_embedds_paths[indices_2d[0]]] = []
-        dict_paths_new_subjs_base_subjs[new_subj_embedds_paths[indices_2d[0]]].append(base_subj_embedds_paths[indices_2d[1]])
+        dict_paths_new_subjs_base_subjs[new_subj_embedds_paths[indices_2d[0]]].append((base_subj_embedds_paths[indices_2d[1]], cossims_selected_new_subjs[i][0]))
     # print('dict_paths_new_subjs_base_subjs:', dict_paths_new_subjs_base_subjs)
     # sys.exit(0)
     return dict_paths_new_subjs_base_subjs
@@ -214,10 +219,11 @@ def main(args):
         print('\nLoading new subjects embeddings...')
         print(f"    {args.path_new_subjs_embedds}")
         new_subj_embedds_paths        = find_files_paths(args.path_new_subjs_embedds, args.substring_file_new_subj)
-        indices_2d_selected_new_subjs = load_select_new_subjs_embedds(base_subj_embedds, new_subj_embedds_paths, args.similarity_range)
+        indices_2d_selected_new_subjs, cossims_selected_new_subjs = load_select_new_subjs_embedds(base_subj_embedds, new_subj_embedds_paths, args.similarity_range)
     
         dict_new_subj_data = {'new_subj_embedds_paths':        new_subj_embedds_paths,
-                              'indices_2d_selected_new_subjs': indices_2d_selected_new_subjs}
+                              'indices_2d_selected_new_subjs': indices_2d_selected_new_subjs,
+                              'cossims_selected_new_subjs':    cossims_selected_new_subjs}
         print(f"    Saving pre-loaded data to disk: \'{path_new_subj_data}\'")
         save_pickle(dict_new_subj_data, path_new_subj_data)
     else:
@@ -225,10 +231,13 @@ def main(args):
         dict_new_subj_data = load_pickle(path_new_subj_data)
         new_subj_embedds_paths        = dict_new_subj_data['new_subj_embedds_paths']
         indices_2d_selected_new_subjs = dict_new_subj_data['indices_2d_selected_new_subjs']
+        cossims_selected_new_subjs    = dict_new_subj_data['cossims_selected_new_subjs']
+        # print('cossims_selected_new_subjs:', cossims_selected_new_subjs)
+        # print('cossims_selected_new_subjs.shape:', cossims_selected_new_subjs.shape)
 
 
     print('\nMaking dict of subjs paths...')
-    dict_paths_new_subjs_base_subjs = make_dict_new_subjs_base_subjs(new_subj_embedds_paths, base_subj_embedds_paths, indices_2d_selected_new_subjs)
+    dict_paths_new_subjs_base_subjs = make_dict_new_subjs_base_subjs(new_subj_embedds_paths, base_subj_embedds_paths, indices_2d_selected_new_subjs, cossims_selected_new_subjs)
     print('\nlen(dict_paths_new_subjs_base_subjs):', len(dict_paths_new_subjs_base_subjs))
     path_dict_paths_new_subjs_base_subjs = os.path.join(path_output_folder, 'dict_paths_new_subjs_base_subjs.json')
     print(f"    Saving dict_paths_new_subjs_base_subjs: \'{path_dict_paths_new_subjs_base_subjs}\'")

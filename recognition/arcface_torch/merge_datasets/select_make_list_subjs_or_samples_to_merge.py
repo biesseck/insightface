@@ -6,6 +6,8 @@ import argparse
 import re
 from glob import glob
 import copy
+import pickle
+import json
 
 
 
@@ -23,6 +25,31 @@ def parse_args():
     args = parser.parse_args()
 
     return args
+
+
+def save_pickle(obj, path):
+    with open(path, 'wb') as f:
+        pickle.dump(obj, f, protocol=pickle.HIGHEST_PROTOCOL)
+
+def load_pickle(path):
+    with open(path, 'rb') as f:
+        obj = pickle.load(f)
+    return obj
+
+
+def save_json(data, path, indent=4):
+    if not isinstance(data, dict):
+        raise TypeError("The 'data' argument must be a dictionary.")
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=indent, ensure_ascii=False)
+
+def load_json(path):
+    if not os.path.isfile(path):
+        raise FileNotFoundError(f"The file '{path}' does not exist.")
+    with open(path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    return data
+
 
 
 def _numeric_sort_key(path):
@@ -142,6 +169,15 @@ def load_select_new_subjs_embedds(base_subj_embedds, new_subj_embedds_paths, sim
     return global_indices_selected_embedds
 
 
+def make_dict_new_subjs_base_subjs(new_subj_embedds_paths, base_subj_embedds_paths, indices_2d_selected_new_subjs):
+    dict_paths_new_subjs_base_subjs = {}
+    for indices_2d in indices_2d_selected_new_subjs:
+        if not new_subj_embedds_paths[indices_2d[0]] in dict_paths_new_subjs_base_subjs:
+            dict_paths_new_subjs_base_subjs[new_subj_embedds_paths[indices_2d[0]]] = []
+        dict_paths_new_subjs_base_subjs[new_subj_embedds_paths[indices_2d[0]]].append(base_subj_embedds_paths[indices_2d[1]])
+    # print('dict_paths_new_subjs_base_subjs:', dict_paths_new_subjs_base_subjs)
+    # sys.exit(0)
+    return dict_paths_new_subjs_base_subjs
 
 
 def main(args):
@@ -149,24 +185,65 @@ def main(args):
     assert os.path.exists(args.path_new_subjs_embedds), f'Error: no such path or file \'{args.path_new_subjs_embedds}\''
 
 
-    print('Loading base subjects embeddings...')
-    print(f"    {args.path_base_subj_embedds}")
-    base_subj_embedds_paths = find_files_paths(args.path_base_subj_embedds, args.substring_file_base_subj)
-    base_subj_embedds       = load_embeddings(base_subj_embedds_paths)
-    
-    print('\nLoading new subjects embeddings...')
-    print(f"    {args.path_new_subjs_embedds}")
-    new_subj_embedds_paths        = find_files_paths(args.path_new_subjs_embedds, args.substring_file_new_subj)
-    indices_2d_selected_new_subjs = load_select_new_subjs_embedds(base_subj_embedds, new_subj_embedds_paths, args.similarity_range)
-    indices_1d_selected_new_subjs = indices_2d_selected_new_subjs[:,0]
-
-    selected_new_subj_embedds_paths = [new_subj_embedds_paths[idx] for idx in indices_1d_selected_new_subjs]
-    print('\nlen(selected_new_subj_embedds_paths):', len(selected_new_subj_embedds_paths))
-
     output_folder_name = f"merge_with_dataset_{'-'.join(args.path_new_subjs_embedds.split('/')[-3:])}_sim-range={args.similarity_range}".replace(' ','')
     path_output_folder = os.path.join(os.path.dirname(args.path_base_subj_embedds), output_folder_name)
     print(f"\npath_output_folder: \'{path_output_folder}\'")
     os.makedirs(path_output_folder, exist_ok=True)
+
+
+    path_base_subj_data = os.path.join(path_output_folder, 'base_subj_data.pkl')
+    if not os.path.isfile(path_base_subj_data):
+        print('Loading base subjects embeddings...')
+        print(f"    {args.path_base_subj_embedds}")
+        base_subj_embedds_paths = find_files_paths(args.path_base_subj_embedds, args.substring_file_base_subj)
+        base_subj_embedds       = load_embeddings(base_subj_embedds_paths)
+
+        dict_base_subj_data = {'base_subj_embedds_paths': base_subj_embedds_paths,
+                               'base_subj_embedds':       base_subj_embedds}
+        print(f"    Saving pre-loaded data to disk: \'{path_base_subj_data}\'")
+        save_pickle(dict_base_subj_data, path_base_subj_data)
+    else:
+        print(f"    Loading pre-saved data from disk: \'{path_base_subj_data}\'")
+        dict_base_subj_data = load_pickle(path_base_subj_data)
+        base_subj_embedds_paths = dict_base_subj_data['base_subj_embedds_paths']
+        base_subj_embedds       = dict_base_subj_data['base_subj_embedds']
+    
+
+    path_new_subj_data = os.path.join(path_output_folder, 'new_subj_data.pkl')
+    if not os.path.isfile(path_new_subj_data):
+        print('\nLoading new subjects embeddings...')
+        print(f"    {args.path_new_subjs_embedds}")
+        new_subj_embedds_paths        = find_files_paths(args.path_new_subjs_embedds, args.substring_file_new_subj)
+        indices_2d_selected_new_subjs = load_select_new_subjs_embedds(base_subj_embedds, new_subj_embedds_paths, args.similarity_range)
+    
+        dict_new_subj_data = {'new_subj_embedds_paths':        new_subj_embedds_paths,
+                              'indices_2d_selected_new_subjs': indices_2d_selected_new_subjs}
+        print(f"    Saving pre-loaded data to disk: \'{path_new_subj_data}\'")
+        save_pickle(dict_new_subj_data, path_new_subj_data)
+    else:
+        print(f"    Loading pre-saved data from disk: \'{path_new_subj_data}\'")
+        dict_new_subj_data = load_pickle(path_new_subj_data)
+        new_subj_embedds_paths        = dict_new_subj_data['new_subj_embedds_paths']
+        indices_2d_selected_new_subjs = dict_new_subj_data['indices_2d_selected_new_subjs']
+
+
+    print('\nMaking dict of subjs paths...')
+    dict_paths_new_subjs_base_subjs = make_dict_new_subjs_base_subjs(new_subj_embedds_paths, base_subj_embedds_paths, indices_2d_selected_new_subjs)
+    print('\nlen(dict_paths_new_subjs_base_subjs):', len(dict_paths_new_subjs_base_subjs))
+    path_dict_paths_new_subjs_base_subjs = os.path.join(path_output_folder, 'dict_paths_new_subjs_base_subjs.json')
+    print(f"    Saving dict_paths_new_subjs_base_subjs: \'{path_dict_paths_new_subjs_base_subjs}\'")
+    save_json(dict_paths_new_subjs_base_subjs, path_dict_paths_new_subjs_base_subjs, indent=4)
+
+
+    indices_1d_selected_new_subjs = indices_2d_selected_new_subjs[:,0]
+    selected_new_subj_embedds_paths = [new_subj_embedds_paths[idx] for idx in indices_1d_selected_new_subjs]
+    print('\nlen(selected_new_subj_embedds_paths):', len(selected_new_subj_embedds_paths))
+
+
+
+
+
+    
 
     print('\nFinished!\n')
 

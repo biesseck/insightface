@@ -94,7 +94,8 @@ def main(args):
         cfg.batch_size,
         cfg.dali,
         cfg.seed,
-        cfg.num_workers
+        cfg.num_workers,
+        cfg
     )
 
     backbone = get_model(

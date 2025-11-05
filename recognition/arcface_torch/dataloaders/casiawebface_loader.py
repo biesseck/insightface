@@ -33,9 +33,10 @@ class CASIAWebFace_loader(Dataset):
             raise Exception(f'Dataset path does not exists: \'{root_dir}\'')
 
         self.root_dir = root_dir
+        self.transform = transform
         self.file_ext = '.png'
         self.path_files = ud.find_files(self.root_dir, self.file_ext)
-        self.path_files = self.append_dataset_name(self.path_files, dataset_name='casia')
+        self.path_files = self.append_dataset_name(self.path_files, dataset_name='casiawebface')
         self.subjs_list, self.subjs_dict, self.races_dict, self.genders_dict = self.get_subj_race_gender_dicts(self.path_files)
 
         self.samples_list = self.make_samples_list_with_labels(self.path_files, self.subjs_list, self.subjs_dict, self.races_dict, self.genders_dict)
@@ -110,9 +111,11 @@ class CASIAWebFace_loader(Dataset):
 
 
     def load_img(self, img_path):
-        img_bgr = cv2.imread(img_path)
-        img_rgb = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB)
-        return img_rgb.astype(np.float32)
+        # img_bgr = cv2.imread(img_path)
+        # img_rgb = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB)
+        # return img_rgb.astype(np.float32)
+        img_rgb = Image.open(img_path)
+        return img_rgb
 
 
     def __getitem__(self, index):
@@ -133,7 +136,10 @@ class CASIAWebFace_loader(Dataset):
 
         if img_path.endswith('.jpg') or img_path.endswith('.jpeg') or img_path.endswith('.png'):
             rgb_data = self.load_img(img_path)
-            rgb_data = self.normalize_img(rgb_data)
+            # rgb_data = self.normalize_img(rgb_data)
+        
+        if self.transform is not None:
+            rgb_data = self.transform(rgb_data)
 
         # return (rgb_data, subj_idx)
         # return (rgb_data, race_idx)

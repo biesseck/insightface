@@ -50,7 +50,7 @@ elif uname.nodename == 'diolkos':
     # config.val_protocol_path = ['/nobackup/unico/frcsyn_wacv2024/comparison_files/comparison_files/sub-tasks_1.1_1.2/bupt_comparison.txt']
 
 
-    config.path_subjs_list_to_merge = '/nobackup/unico/datasets/face_recognition/1_CASIA-WebFace/merge_with_dataset_MS-Celeb-1M-ms1m-retinaface-t1-imgs_FACE_EMBEDDINGS_sim-range=[0.7,1.0]/dict_paths_new_subjs_base_subjs.json'
+    config.path_subjs_list_to_merge = '/nobackup/unico/datasets/face_recognition/1_CASIA-WebFace/merge_with_dataset_MS-Celeb-1M-ms1m-retinaface-t1-imgs_FACE_EMBEDDINGS_sim-range=[0.5,0.69]/dict_paths_new_subjs_base_subjs.json'
 
 else:
     raise Exception(f'Paths of train and val datasets could not be found in file \'{__file__}\'')
@@ -58,12 +58,12 @@ else:
 
 
 # config.num_classes = 85742
-# config.num_classes = 10572
-config.num_classes = 10572 + 5786
+config.num_classes = 10572
+# config.num_classes = 10572 + 5786    # not necessary anymore
 
 # config.num_image = 5822653
-# config.num_image = 490623
-config.num_image = 490623 + 518848
+config.num_image = 490623
+# config.num_image = 490623 + 518848   # not necessary anymore
 
 config.num_epoch = 20
 # config.num_epoch = 30

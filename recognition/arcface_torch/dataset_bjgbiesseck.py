@@ -1,5 +1,5 @@
 import numbers
-import os
+import os, sys
 import queue as Queue
 import threading
 from typing import Iterable
@@ -19,6 +19,25 @@ from utils.utils_distributed_sampler import get_dist_info, worker_init_fn
 # from dataloaders.gandiffface_loader import GANDiffFace_loader
 # from dataloaders.dcface_loader import DCFace_loader
 # from dataloaders.dcface_localtrained_loader import DCFaceLocalTrained_loader
+
+
+def merge_dataloaders(dataloader1=[], dataloader2=[]):
+    min_class_label1, max_class_label1 = dataloader1.final_samples_list[0][2], dataloader1.final_samples_list[0][2]
+    for sample in dataloader1.final_samples_list:
+        if sample[2] < min_class_label1:
+            min_class_label1 = sample[2]
+        elif sample[2] > max_class_label1:
+            max_class_label1 = sample[2]
+    # print(f'min_class_label: {min_class_label}    max_class_label: {max_class_label}')
+
+    new_min_class_label2 = max_class_label1+1
+    for i in range(len(dataloader2.final_samples_list)):
+        dataloader2.final_samples_list[i][2] += new_min_class_label2
+
+    dataloader1.final_samples_list.extend(dataloader2.final_samples_list)
+    dataloader1.num_classes += dataloader2.num_classes
+    return dataloader1
+
 
 
 def get_dataloader(
@@ -92,6 +111,17 @@ def get_dataloader(
             else:
                 # train_set = ImageFolder(root_dir, transform)        # original
                 raise Exception('Dataset could not be identified!')   # Bernardo
+
+
+            # Merge dataset
+            if hasattr(cfg, 'path_subjs_list_to_merge'):
+                from dataloaders.dataset_from_json_loader import DataFromJSON_loader
+                dataset_name = cfg.path_subjs_list_to_merge.split('/')[-2]
+                train_set_from_json = DataFromJSON_loader(cfg.path_subjs_list_to_merge, dataset_name)
+                # print('len(train_set_from_json):', len(train_set_from_json))
+            
+                # Merge 2 dataloaders
+                train_set = merge_dataloaders(train_set, train_set_from_json)
 
 
     # DALI

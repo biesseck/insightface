@@ -5,6 +5,8 @@ from PIL import Image
 from torch.utils.data import DataLoader, Dataset
 from torchvision import transforms
 import random
+import json
+import re
 
 try:
     from . import utils_dataloaders as ud
@@ -12,9 +14,71 @@ except ImportError as e:
     import utils_dataloaders as ud
 
 
-class CASIAWebFace_loader(Dataset):
-    def __init__(self, root_dir, transform=None, other_dataset=None):
-        super(CASIAWebFace_loader, self).__init__()
+
+
+def _numeric_sort_key(path):
+    return [int(num) for num in re.findall(r'\d+', os.path.basename(path))]
+
+
+def find_files_paths(path_embedds, exts=['.npy'], substring_file='', verbose=False):
+    assert os.path.exists(path_embedds), f"Error: no such path or file '{path_embedds}'"
+    matched_files = []
+    count = 0
+    for root, _, files in os.walk(path_embedds):
+        for fname in files:
+            # Check substring condition
+            if substring_file not in fname:
+                continue
+            # Check extension condition (if exts is not empty)
+            if exts and not any(fname.lower().endswith(ext.lower()) for ext in exts):
+                continue
+
+            full_path = os.path.join(root, fname)
+            matched_files.append(full_path)
+            count += 1
+            if verbose:
+                print(f"    Found files: {count}", end="\r")
+
+    if verbose:
+        print()
+    matched_files.sort(key=_numeric_sort_key)
+    return matched_files
+
+
+def load_json(path):
+    if not os.path.isfile(path):
+        raise FileNotFoundError(f"The file '{path}' does not exist.")
+    with open(path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    return data
+
+
+def get_subjs_dirs_paths_from_json(dict_subjs_json={}, split_str='_FACE_EMBEDDINGS/', index_subj=-2):
+    subjs_embedds_paths = list(dict_subjs_json.keys())
+    for i in range(len(subjs_embedds_paths)):
+        dataset = subjs_embedds_paths[i].split(split_str)[0]
+        subj_name = subjs_embedds_paths[i].split('/')[index_subj]
+        path_dir_subj = os.path.join(dataset, subj_name)
+        subjs_embedds_paths[i] = path_dir_subj
+    subjs_embedds_paths = list(set(subjs_embedds_paths))
+    subjs_embedds_paths.sort(key=_numeric_sort_key)
+    return subjs_embedds_paths
+
+
+def get_subjs_paths_files(list_subjs_dirs_paths):
+    path_files = []
+    for i, subj_dir_path in enumerate(list_subjs_dirs_paths):
+        subj_paths_files = find_files_paths(subj_dir_path, exts=['.jpg','.jpeg','.png'], substring_file='', verbose=False)
+        path_files.extend(subj_paths_files)
+    # print('path_files:', path_files)
+    # sys.exit(0)
+    return path_files
+
+
+
+class DataFromJSON_loader(Dataset):
+    def __init__(self, root_dir, dataset_name='', transform=None):
+        super(DataFromJSON_loader, self).__init__()
         # self.transform = transform
         # self.root_dir = root_dir
         # self.local_rank = local_rank
@@ -35,8 +99,15 @@ class CASIAWebFace_loader(Dataset):
         self.root_dir = root_dir
         self.transform = transform
         self.file_ext = '.png'
-        self.path_files = ud.find_files(self.root_dir, self.file_ext)
-        self.path_files = self.append_dataset_name(self.path_files, dataset_name='casiawebface')
+
+        self.dict_subjs_json = load_json(root_dir)
+        # print('self.dict_subjs_json:', self.dict_subjs_json)
+        self.list_subjs_dirs_paths = get_subjs_dirs_paths_from_json(self.dict_subjs_json)
+
+        # self.path_files = ud.find_files(self.root_dir, self.file_ext)
+        self.path_files = get_subjs_paths_files(self.list_subjs_dirs_paths)
+
+        self.path_files = self.append_dataset_name(self.path_files, dataset_name=dataset_name)
         self.subjs_list, self.subjs_dict, self.races_dict, self.genders_dict = self.get_subj_race_gender_dicts(self.path_files)
 
         self.samples_list = self.make_samples_list_with_labels(self.path_files, self.subjs_list, self.subjs_dict, self.races_dict, self.genders_dict)
@@ -44,14 +115,14 @@ class CASIAWebFace_loader(Dataset):
         # print('self.samples_list', self.samples_list)
         # print('len(self.samples_list)', len(self.samples_list))
 
-        if not other_dataset is None:
-            self.path_files += other_dataset.path_files
-            self.subjs_list += other_dataset.subjs_list
-            _, max_subj_idx = ud.get_min_max_value_dict(self.subjs_dict)
-            self.subjs_dict = ud.merge_dicts(self.subjs_dict, other_dataset.subjs_dict, stride=max_subj_idx+1)
-            self.races_dict = ud.merge_dicts(self.races_dict, other_dataset.races_dict)
-            self.genders_dict = ud.merge_dicts(self.genders_dict, other_dataset.genders_dict)
-            self.samples_list += other_dataset.samples_list
+        # if not other_dataset is None:
+        #     self.path_files += other_dataset.path_files
+        #     self.subjs_list += other_dataset.subjs_list
+        #     _, max_subj_idx = ud.get_min_max_value_dict(self.subjs_dict)
+        #     self.subjs_dict = ud.merge_dicts(self.subjs_dict, other_dataset.subjs_dict, stride=max_subj_idx+1)
+        #     self.races_dict = ud.merge_dicts(self.races_dict, other_dataset.races_dict)
+        #     self.genders_dict = ud.merge_dicts(self.genders_dict, other_dataset.genders_dict)
+        #     self.samples_list += other_dataset.samples_list
 
         self.num_classes = len(self.subjs_list)
         self.final_samples_list = self.replace_strings_labels_by_int_labels(self.samples_list, self.subjs_dict, self.races_dict, self.genders_dict)

@@ -48,6 +48,16 @@ elif uname.nodename == 'diolkos':
     # config.val_dataset_dir = ['/nobackup/unico/frcsyn_wacv2024/datasets/real/3_BUPT-BalancedFace/race_per_7000_crops_112x112']
     # config.val_protocol_path = ['/nobackup/unico/frcsyn_wacv2024/comparison_files/comparison_files/sub-tasks_1.1_1.2/bupt_comparison.txt']
 
+elif uname.nodename == 'cedro':
+    config.rec = '/hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/CASIA-WebFace/imgs_crops_112x112'   # diolkos
+
+    config.val_targets = ['/hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/CASIA-WebFace/faces_webface_112x112/lfw.bin', '/hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/CASIA-WebFace/faces_webface_112x112/cfp_fp.bin', '/hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/CASIA-WebFace/faces_webface_112x112/agedb_30.bin']
+    # config.val_targets = ['/nobackup/unico/datasets/face_recognition/1_CASIA-WebFace/faces_webface_112x112/lfw.bin', '/nobackup/unico/datasets/face_recognition/1_CASIA-WebFace/faces_webface_112x112/cfp_fp.bin', '/nobackup/unico/datasets/face_recognition/1_CASIA-WebFace/faces_webface_112x112/agedb_30.bin', 'bupt']
+    # config.val_targets = ['bupt']
+    
+    # config.val_dataset_dir = ['/nobackup/unico/frcsyn_wacv2024/datasets/real/3_BUPT-BalancedFace/race_per_7000_crops_112x112']
+    # config.val_protocol_path = ['/nobackup/unico/frcsyn_wacv2024/comparison_files/comparison_files/sub-tasks_1.1_1.2/bupt_comparison.txt']
+
 else:
     raise Exception(f'Paths of train and val datasets could not be found in file \'{__file__}\'')
 

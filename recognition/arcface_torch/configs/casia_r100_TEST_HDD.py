@@ -52,13 +52,16 @@ if uname.nodename == 'duo':
     config.val_dataset_dir = ['']
     config.val_protocol_path = ['']
 
-elif uname.nodename == 'diolkos':
-    config.rec = '/nobackup/unico/frcsyn_wacv2024/datasets/real/1_CASIA-WebFace/imgs_crops_112x112'
 
-    config.val_targets = ['/home/bjgbiesseck/datasets/frcsyn_wacv2024/faces_webface_112x112/lfw.bin', '/home/bjgbiesseck/datasets/frcsyn_wacv2024/faces_webface_112x112/cfp_fp.bin', '/home/bjgbiesseck/datasets/frcsyn_wacv2024/faces_webface_112x112/agedb_30.bin', 'bupt']
+elif uname.nodename == 'diolkos':
+    # config.rec = '/nobackup/unico/frcsyn_wacv2024/datasets/real/1_CASIA-WebFace/imgs_crops_112x112'
+    config.rec = '/hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/CASIA-WebFace/imgs_crops_112x112'
+
+    config.val_targets = ['/hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/CASIA-WebFace/faces_webface_112x112/lfw.bin', '/hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/CASIA-WebFace/faces_webface_112x112/cfp_fp.bin', '/hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/CASIA-WebFace/faces_webface_112x112/agedb_30.bin']
     # config.val_targets = ['bupt']
-    config.val_dataset_dir = ['/nobackup/unico/frcsyn_wacv2024/datasets/real/3_BUPT-BalancedFace/race_per_7000_crops_112x112']
-    config.val_protocol_path = ['/nobackup/unico/frcsyn_wacv2024/comparison_files/comparison_files/sub-tasks_1.1_1.2/bupt_comparison.txt']
+    # config.val_dataset_dir = ['/nobackup/unico/frcsyn_wacv2024/datasets/real/3_BUPT-BalancedFace/race_per_7000_crops_112x112']
+    # config.val_protocol_path = ['/nobackup/unico/frcsyn_wacv2024/comparison_files/comparison_files/sub-tasks_1.1_1.2/bupt_comparison.txt']
+
 
 elif uname.nodename == 'cedro':
     config.rec = '/hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/CASIA-WebFace/imgs_crops_112x112'

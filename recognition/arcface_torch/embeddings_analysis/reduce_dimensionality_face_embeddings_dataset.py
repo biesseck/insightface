@@ -7,6 +7,7 @@ import re
 import time
 import pickle
 from sklearn.manifold import TSNE
+
 import matplotlib.pyplot as plt
 
 
@@ -15,6 +16,7 @@ def parse_args():
     parser.add_argument('--input-path', type=str, default='/disk0/bjgbiesseck/face_recognition/1st_frcsyn_wacv2024/datasets/real/1_CASIA-WebFace/imgs_crops_112x112_STYLE_FEATURES')
     parser.add_argument('--input-ext', type=str, default='_id_feat.pt')
     parser.add_argument('--output-path', type=str, default='')
+    parser.add_argument('--num-classes', type=int, default=-1)   # -1 == all classes
     args = parser.parse_args()
     return args
 
@@ -68,50 +70,42 @@ def load_dict_from_pickle(filename):
         return pickle.load(f)
 
 
+def get_samples_indexes_corresponding_classes(embedds_classes_int, num_classes):
+    last_sample_target_class = -1
+    for idx_sample_class, sample_class in enumerate(embedds_classes_int):
+        if sample_class == num_classes:
+            last_sample_target_class = idx_sample_class
+            break
+    return last_sample_target_class
+
 
 def save_scatter_plot_embeddings_2d(embedds_2d, embedds_classes_int, title_scatter_plot, path_scatter_plot):
-    """
-    Generates and saves a 2D scatter plot of embeddings.
-    
-    Args:
-        embedds_2d (np.array): Shape (N, 2) containing x, y coordinates.
-        embedds_classes_int (list): Size N, containing integer class labels.
-        title_scatter_plot (str): Title of the plot.
-        path_scatter_plot (str): File path to save the png.
-    """
-    # 1. Ensure output directory exists
     directory = os.path.dirname(path_scatter_plot)
     if directory:
         os.makedirs(directory, exist_ok=True)
 
-    # 2. Create the figure
-    # figsize=(10, 8) creates a reasonably sized image for papers/reports
     plt.figure(figsize=(10, 8), dpi=150)
-    
-    # 3. Plot the data
-    # c=colors, cmap='jet' (or 'tab10' for few classes), alpha=0.6 for transparency
     scatter = plt.scatter(
         embedds_2d[:, 0], 
         embedds_2d[:, 1], 
         c=embedds_classes_int, 
         cmap='jet', 
         alpha=0.6,
-        edgecolors='none', # Removes outline for cleaner look on dense plots
+        edgecolors='none',
         # s=30 # Size of dots
         s=5 # Size of dots
     )
-    
-    # 4. Add aesthetics
+
     plt.colorbar(scatter, label='Class ID')
     plt.title(title_scatter_plot, fontsize=14)
     plt.xlabel('Dimension 1')
     plt.ylabel('Dimension 2')
     plt.grid(True, linestyle='--', alpha=0.5)
-    
-    # 5. Save and Close
+    plt.xlim(-7, 7)
+    plt.ylim(-7, 7)
+
     plt.savefig(path_scatter_plot, bbox_inches='tight')
-    plt.close() # Closes the figure to free memory
-    print(f"Scatter plot saved to: {path_scatter_plot}")
+    plt.close()
 
 
 
@@ -193,12 +187,16 @@ if __name__ == '__main__':
     print(f'------------------')
 
 
-    # embedds_feats_2d_tsne = embedds_feats_2d_tsne[:100,:]
-    # embedds_classes_int   = embedds_classes_int[:100]
-    # print('embedds_classes_int:', embedds_classes_int)
+    if args.num_classes > -1 and args.num_classes < max(embedds_classes_int):
+        idx_last_sample_target_class = get_samples_indexes_corresponding_classes(embedds_classes_int, args.num_classes)
+        embedds_feats_2d_tsne = embedds_feats_2d_tsne[:idx_last_sample_target_class,:]
+        embedds_classes_int   = embedds_classes_int[:idx_last_sample_target_class]
+        # print('embedds_classes_int:', embedds_classes_int)
+    
 
     title_scatter_plot_embeddings_2d = f"{args.input_path.split('/')[-4]} - Face Embeddings (t-SNE)"
-    file_name_scatter_plot_embeddings_2d = 'scatter_plot_embeddings_2d.png'
+    num_classes_to_plot = args.num_classes if args.num_classes > -1 else max(embedds_classes_int)+1
+    file_name_scatter_plot_embeddings_2d = f'scatter_plot_embeddings_2d_num-classes={num_classes_to_plot}.png'
     path_scatter_plot_embeddings_2d = os.path.join(args.output_path, file_name_scatter_plot_embeddings_2d)
     print(f"Saving scatter plot of embeddings 2D: \'{path_scatter_plot_embeddings_2d}\'")
     print(f"    Plotting samples: {embedds_feats_2d_tsne.shape[0]}")

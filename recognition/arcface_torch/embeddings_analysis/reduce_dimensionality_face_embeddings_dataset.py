@@ -9,6 +9,7 @@ import pickle
 from sklearn.manifold import TSNE
 
 import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
 
 
 def parse_args():
@@ -93,16 +94,19 @@ def save_scatter_plot_embeddings_2d(embedds_2d, embedds_classes_int, title_scatt
         alpha=0.6,
         edgecolors='none',
         # s=30 # Size of dots
-        s=5 # Size of dots
+        s=10 # Size of dots
     )
 
-    plt.colorbar(scatter, label='Class ID')
     plt.title(title_scatter_plot, fontsize=14)
     plt.xlabel('Dimension 1')
     plt.ylabel('Dimension 2')
     plt.grid(True, linestyle='--', alpha=0.5)
     plt.xlim(-7, 7)
     plt.ylim(-7, 7)
+
+    cbar = plt.colorbar(scatter, label='Class ID')
+    cbar.formatter = ticker.FuncFormatter(lambda x, pos: f"{int(x):05d}")
+    cbar.update_ticks()
 
     plt.savefig(path_scatter_plot, bbox_inches='tight')
     plt.close()
@@ -194,8 +198,8 @@ if __name__ == '__main__':
         # print('embedds_classes_int:', embedds_classes_int)
     
 
-    title_scatter_plot_embeddings_2d = f"{args.input_path.split('/')[-4]} - Face Embeddings (t-SNE)"
     num_classes_to_plot = args.num_classes if args.num_classes > -1 else max(embedds_classes_int)+1
+    title_scatter_plot_embeddings_2d = f"{args.input_path.split('/')[-2]} - Face Embeddings (t-SNE) - num-classes: {num_classes_to_plot}"
     file_name_scatter_plot_embeddings_2d = f'scatter_plot_embeddings_2d_num-classes={num_classes_to_plot}.png'
     path_scatter_plot_embeddings_2d = os.path.join(args.output_path, file_name_scatter_plot_embeddings_2d)
     print(f"Saving scatter plot of embeddings 2D: \'{path_scatter_plot_embeddings_2d}\'")

@@ -123,6 +123,12 @@ def get_dataloader(
                 # Merge 2 dataloaders
                 train_set = merge_dataloaders(train_set, train_set_from_json)
 
+            if hasattr(cfg, 'path_other_dataset'):
+                print(f'Loading other train dataset \'{cfg.path_other_dataset}\' ...')
+                other_train_set = CASIAWebFace_loader(cfg.path_other_dataset, transform)
+
+                train_set = merge_dataloaders(train_set, other_train_set)
+
 
     # DALI
     if dali:

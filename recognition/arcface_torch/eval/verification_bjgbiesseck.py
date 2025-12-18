@@ -72,6 +72,7 @@ from scipy import stats
 from sklearn.decomposition import PCA
 from sklearn.model_selection import KFold
 from PIL import Image
+from pathlib import Path
 import matplotlib.pyplot as plt
 
 sys.path.insert(0, "../")
@@ -1784,17 +1785,38 @@ def load_facial_attributes(data_set, args):
     data_set['races_list']   = np.array(races_list)
     data_set['ages_list']    = np.array(ages_list)
     data_set['genders_list'] = np.array(genders_list)
-    
-    # # TEST
-    # perc_pairs_same_race   = np.sum(np.array([True if race_pair[0]  ==race_pair[1]   else False for race_pair   in races_list]))   / len(races_list)
-    # perc_pairs_same_gender = np.sum(np.array([True if gender_pair[0]==gender_pair[1] else False for gender_pair in genders_list])) / len(genders_list)
-    # perc_pairs_same_age    = np.sum(np.array([True if age_pair[0]   ==age_pair[1]    else False for age_pair    in ages_list]))    / len(ages_list)
-    # print('perc_pairs_same_race:', perc_pairs_same_race)
-    # print('perc_pairs_same_gender:', perc_pairs_same_gender)
-    # print('perc_pairs_same_age:', perc_pairs_same_age)
-    # raise Exception()
 
     return data_set
+
+
+def get_base_root(current_path="", target_root_name=""):
+    path_obj = Path(current_path)
+    for parent in path_obj.parents:
+        if parent.name == target_root_name.split('/')[-1]:
+            return str(parent)
+    return None
+
+
+def update_files_paths(data_set, args):
+    samples_orig_paths_list   = data_set['samples_orig_paths_list']
+    samples_update_paths_list = data_set['samples_update_paths_list']
+    if not os.path.isfile(samples_update_paths_list[0][0]):
+        for idx_pair, pair_samples_paths in enumerate(samples_update_paths_list):
+            for idx_file, file_path in enumerate(pair_samples_paths):
+                old_base_root = get_base_root(file_path, args.data_dir)
+                file_parent_dir = os.path.dirname(file_path)
+                file_name = os.path.basename(file_path)
+                new_file_path = file_path.replace(old_base_root, args.data_dir)
+                
+                if not os.path.isfile(new_file_path):
+                    old_base_root = get_base_root(file_path, args.data_dir2)
+                    new_file_path = file_path.replace(old_base_root, args.data_dir2)
+                
+                samples_update_paths_list[idx_pair][idx_file] = new_file_path
+    # sys.exit(0)
+    return data_set
+
+
 
 
 
@@ -1919,6 +1941,8 @@ if __name__ == '__main__':
 
             else:
                 raise Exception(f'Error, no \'.bin\' file found in \'{args.data_dir}\'')
+
+            data_set = update_files_paths(data_set, args)
 
             # if type(data_set['data_list']) is list and data_set['data_list'][1] == None:
             if type(data_set['data_list']):

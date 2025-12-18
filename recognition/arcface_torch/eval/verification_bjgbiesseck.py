@@ -1803,6 +1803,11 @@ if __name__ == '__main__':
 
     args = parse_arguments()
 
+    assert os.path.exists(args.data_dir), f"Error, no such file or directory: \'{args.data_dir}\'"
+    if args.data_dir2:          assert os.path.exists(args.data_dir2), f"Error, no such file or directory: \'{args.data_dir2}\'"
+    if args.facial_attributes:  assert os.path.exists(args.facial_attributes), f"Error, no such file or directory: \'{args.facial_attributes}\'"
+    if args.facial_attributes2: assert os.path.exists(args.facial_attributes2), f"Error, no such file or directory: \'{args.facial_attributes2}\'"
+
     image_size = [112, 112]
     print('image_size', image_size)
 

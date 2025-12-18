@@ -7,11 +7,51 @@ from mxnet import ndarray as nd
 import copy
 import re
 import random
+import glob
 
 
 class Loader_HDA_Doppelganger:
     def __init__(self):
         pass
+
+
+    def str_to_bool(self, s):
+        true_values = {'yes', 'true', 't', 'on', '1'}
+        false_values = {'no', 'false', 'f', 'off', '0'}
+        
+        s = s.strip().lower()
+        if s in true_values:
+            return True
+        elif s in false_values:
+            return False
+        else:
+            raise ValueError(f"Invalid truth value {s!r}")
+
+
+    def load_protocol(self, protocol_file):
+        with open(protocol_file, 'r') as file:
+            all_lines = [line.strip() for line in file.readlines()]
+            if all_lines[0].startswith('SAMPLE0,SAMPLE1,LABEL'):
+                all_lines = all_lines[1:]
+            protocol = len(all_lines) * [None]
+            # print('all_lines:', all_lines)
+
+            for i, line in enumerate(all_lines):
+                # print('line:', line)
+                line_data = line.split(',')
+                # sys.exit(0)
+                sample0      = line_data[0]
+                sample1      = line_data[1]
+                pair_label   = int(self.str_to_bool(line_data[2]))
+
+                pair = {}
+                pair['sample0']    = sample0
+                pair['sample1']    = sample1
+                pair['pair_label'] = pair_label
+
+                protocol[i] = pair
+            
+            return protocol
 
 
     def get_all_files_in_path(self, folder_path, file_extension=['.jpg','.jpeg','.png'], pattern=''):
@@ -32,6 +72,50 @@ class Loader_HDA_Doppelganger:
         # file_list.sort()
         file_list = natural_sort(file_list)
         return file_list
+
+
+    def update_paths(self, protocol, data_dir, data_dir_positive_samples, replace_ext='.png', inplace=True):
+        if not inplace:
+            protocol = copy.deepcopy(protocol)
+
+        indexes_invalid_pairs = []
+        num_img_multiple_faces = 0
+        for i, pair in enumerate(protocol):
+            sample0 = pair['sample0']
+            sample1 = pair['sample1']
+            pair_label = pair['pair_label']
+
+            if replace_ext != '':
+                curr_ext = sample0.split('.')[-1]
+                sample0 = sample0.replace('.'+curr_ext, replace_ext)
+                sample1 = sample1.replace('.'+curr_ext, replace_ext)
+            
+            sample0_name, sample0_ext = os.path.splitext(sample0)
+            sample1_name, sample1_ext = os.path.splitext(sample1)
+
+            if pair_label == 0:    # negative pairs from 'HDA-Doppelgaenger'
+                sample0_pattern = os.path.join(data_dir, '/'.join(sample0_name.split('/')[1:])+'*'+sample0_ext).replace('[','*').replace(']','*')
+                sample1_pattern = os.path.join(data_dir, '/'.join(sample1_name.split('/')[1:])+'*'+sample1_ext).replace('[','*').replace(']','*')
+            else:    # positive pairs from 'FRGC'
+                sample0_pattern = os.path.join(data_dir_positive_samples, '/'.join(sample0_name.split('/')[2:])+'*'+sample0_ext).replace('[','*').replace(']','*')
+                sample1_pattern = os.path.join(data_dir_positive_samples, '/'.join(sample1_name.split('/')[2:])+'*'+sample1_ext).replace('[','*').replace(']','*')
+            
+            path_sample0 = self.natural_sort(glob.glob(sample0_pattern))
+            assert len(path_sample0) > 0, f'Error, no file found with pattern \'{sample0_pattern}\''
+            path_sample0 = path_sample0[0]
+
+            path_sample1 = self.natural_sort(glob.glob(sample1_pattern))
+            assert len(path_sample1) > 0, f'Error, no file found with pattern \'{sample1_pattern}\''
+            path_sample1 = path_sample1[0]
+
+            pair['sample0'] = path_sample0
+            pair['sample1'] = path_sample1
+        
+        indexes_invalid_pairs = list(set(indexes_invalid_pairs))
+        if len(indexes_invalid_pairs) > 0:
+            protocol = self.remove_elements_by_indices(protocol, indexes_invalid_pairs)
+
+        return protocol
 
 
     def load_images_protocol(self, data_dir=''):
@@ -146,7 +230,11 @@ class Loader_HDA_Doppelganger:
         return protocol
 
 
-    def load_dataset(self, data_dir, data_dir_positive_samples, image_size, replace_ext='.png'):
+    def load_dataset(self, protocol_file, data_dir, data_dir_positive_samples, image_size, replace_ext='.png'):
+        print(f"Loading protocol: \'{protocol_file}\'")
+        pairs_orig = self.load_protocol(protocol_file)
+        pairs_update = self.update_paths(pairs_orig, data_dir, data_dir_positive_samples, replace_ext, inplace=False)
+
         # pairs_orig = self.load_images_protocol(data_dir)
         pairs_orig = self.load_images_protocol_two_datasets(data_dir, data_dir_positive_samples)
         pairs_update = pairs_orig

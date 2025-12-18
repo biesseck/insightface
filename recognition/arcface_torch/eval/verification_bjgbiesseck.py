@@ -1890,7 +1890,7 @@ if __name__ == '__main__':
                 path_unified_dataset = os.path.join(args.data_dir, f'dataset_{name.lower()}.pkl')
                 if not os.path.exists(path_unified_dataset):
                     print(f'Loading individual images from folder \'{args.data_dir}\' ...')
-                    data_set = Loader_HDA_Doppelganger().load_dataset(args.data_dir, args.data_dir2, image_size)
+                    data_set = Loader_HDA_Doppelganger().load_dataset(args.protocol, args.data_dir, args.data_dir2, image_size)
                     print(f'Saving dataset in file \'{path_unified_dataset}\' ...')
                     write_object_to_file(path_unified_dataset, data_set)
                 else:

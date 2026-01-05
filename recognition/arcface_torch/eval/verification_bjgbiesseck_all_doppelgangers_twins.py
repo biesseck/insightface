@@ -94,7 +94,7 @@ else:
 # models = [('R50/CASIA-Webface_merge_Synth_subj_Arc2Face_similarity=[50,69]',  'r50', '/home/bjgbiesseck/GitHub/bjgbiesseck_insightface/recognition/arcface_torch/work_dirs/casiawebface_merge_Synth_subj_Arc2Face_similarity=[50,69]_r50/2025-12-11_19-13-30_GPU0/model.pt')
 #           ]
 
-models = [('R50/CASIA-Webface_merge_Synth_subj_Arc2Face_similarity=[50,69]',  'r50', '/home/bjgbiesseck/GitHub/bjgbiesseck_insightface/recognition/arcface_torch/work_dirs/casiawebface_merge_Synth_subj_Arc2Face_similarity=[50,69]_r50/2025-12-11_19-13-30_GPU0/model.pt')
+models = [('R50/CASIA-Webface_merge_Synth_1000subj_Arc2Face_similarity=[50,69]',  'r50', '/home/bjgbiesseck/GitHub/bjgbiesseck_insightface/recognition/arcface_torch/work_dirs/casiawebface_merge_Synth_1000subj_Arc2Face_similarity=[50,69]_r50/2025-12-22_22-51-54_GPU0/model.pt')
           ]
 
 

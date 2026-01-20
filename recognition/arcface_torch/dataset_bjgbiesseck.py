@@ -36,6 +36,7 @@ def merge_dataloaders(dataloader1=[], dataloader2=[]):
 
     dataloader1.final_samples_list.extend(dataloader2.final_samples_list)
     dataloader1.num_classes += dataloader2.num_classes
+    dataloader1.num_image   += dataloader2.num_image
     return dataloader1
 
 

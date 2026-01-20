@@ -98,6 +98,7 @@ def main(args):
         cfg
     )
     if hasattr(train_loader.dataset, 'num_classes'): cfg.num_classes = train_loader.dataset.num_classes
+    if hasattr(train_loader.dataset, 'num_image'):   cfg.num_image   = train_loader.dataset.num_image
 
     backbone = get_model(
         cfg.network, dropout=0.0, fp16=cfg.fp16, num_features=cfg.embedding_size).cuda()

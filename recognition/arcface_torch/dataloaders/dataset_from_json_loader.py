@@ -125,6 +125,7 @@ class DataFromJSON_loader(Dataset):
         #     self.samples_list += other_dataset.samples_list
 
         self.num_classes = len(self.subjs_list)
+        self.num_image   = len(self.samples_list)
         self.final_samples_list = self.replace_strings_labels_by_int_labels(self.samples_list, self.subjs_dict, self.races_dict, self.genders_dict)
         random.shuffle(self.final_samples_list)
         # print('self.final_samples_list', self.final_samples_list)

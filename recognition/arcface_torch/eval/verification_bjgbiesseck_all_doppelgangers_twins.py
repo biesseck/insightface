@@ -10,12 +10,18 @@ import json
 import csv
 import socket
 
-
-
 hostname = socket.gethostname()
+
+def parse_arguments():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--type', default='summary', help='\'summary\' or \'inference\'')
+    args = parser.parse_args()
+    return args
+
 
 
 if 'duo' in hostname:
+    # all 6 benchmarks
     benchmarks = [('hda_doppelganger',       '--network %s --model %s --target hda_doppelganger --data-dir /nobackup3/bjgbiesseck/doppelgangers_lookalikes/HDA-Doppelgaenger_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs --protocol /nobackup3/bjgbiesseck/doppelgangers_lookalikes/HDA-Doppelgaenger/verification_protocol_hdadoppelganger_frgc.txt --facial-attributes /nobackup3/bjgbiesseck/doppelgangers_lookalikes/HDA-Doppelgaenger_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs_FACE_ATTRIB --data-dir2 /nobackup3/bjgbiesseck/MICA/FRGC/images_DETECTED_FACES_RETINAFACE_scales=[0.5]_nms=0.4/imgs --facial-attributes2 /nobackup3/bjgbiesseck/MICA/FRGC/images_DETECTED_FACES_RETINAFACE_scales=[0.5]_nms=0.4/imgs_FACE_ATTRIB'),
                   ('doppelver_doppelganger', '--network %s --model %s --target doppelver_doppelganger --data-dir /nobackup3/bjgbiesseck/doppelgangers_lookalikes/DoppelVer/Images/CCA_Images_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs_FACE_EMBEDDINGS_OUTLIERS_INLIERS/thresh=0.4/inliers --protocol /nobackup3/bjgbiesseck/doppelgangers_lookalikes/DoppelVer/DoppelgangerProtocol.csv --ignore-missing-imgs --facial-attributes /nobackup3/bjgbiesseck/doppelgangers_lookalikes/DoppelVer/Images/CCA_Images_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs_FACE_ATTRIB'),
                   ('doppelver_vise',         '--network %s --model %s --target doppelver_vise --data-dir /nobackup3/bjgbiesseck/doppelgangers_lookalikes/DoppelVer/Images/CCA_Images_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs_FACE_EMBEDDINGS_OUTLIERS_INLIERS/thresh=0.4/inliers --protocol /nobackup3/bjgbiesseck/doppelgangers_lookalikes/DoppelVer/ViSEProtocol.csv --ignore-missing-imgs --facial-attributes /nobackup3/bjgbiesseck/doppelgangers_lookalikes/DoppelVer/Images/CCA_Images_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs_FACE_ATTRIB'),
@@ -32,6 +38,7 @@ if 'duo' in hostname:
     #               ]
 
 elif 'diolkos' in hostname:
+    # all 6 benchmarks
     # benchmarks = [('hda_doppelganger',       '--network %s --model %s --target hda_doppelganger --data-dir /nobackup1/bjgbiesseck/datasets/doppelgangers_lookalikes/HDA-Doppelgaenger_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs --protocol /nobackup1/bjgbiesseck/datasets/doppelgangers_lookalikes/HDA-Doppelgaenger/verification_protocol_hdadoppelganger_frgc.txt --facial-attributes /nobackup1/bjgbiesseck/datasets/doppelgangers_lookalikes/HDA-Doppelgaenger_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs_FACE_ATTRIB --data-dir2 /nobackup1/bjgbiesseck/datasets/doppelgangers_lookalikes/FRGC/images_DETECTED_FACES_RETINAFACE_scales=[0.5]_nms=0.4/imgs --facial-attributes2 /nobackup1/bjgbiesseck/datasets/doppelgangers_lookalikes/FRGC/images_DETECTED_FACES_RETINAFACE_scales=[0.5]_nms=0.4/imgs_FACE_ATTRIB'),
     #               ('doppelver_doppelganger', '--network %s --model %s --target doppelver_doppelganger --data-dir /nobackup1/bjgbiesseck/datasets/doppelgangers_lookalikes/DoppelVer/Images/CCA_Images_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs_FACE_EMBEDDINGS_OUTLIERS_INLIERS/thresh=0.4/inliers --protocol /nobackup1/bjgbiesseck/datasets/doppelgangers_lookalikes/DoppelVer/DoppelgangerProtocol.csv --ignore-missing-imgs --facial-attributes /nobackup1/bjgbiesseck/datasets/doppelgangers_lookalikes/DoppelVer/Images/CCA_Images_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs_FACE_ATTRIB'),
     #               ('doppelver_vise',         '--network %s --model %s --target doppelver_vise --data-dir /nobackup1/bjgbiesseck/datasets/doppelgangers_lookalikes/DoppelVer/Images/CCA_Images_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs_FACE_EMBEDDINGS_OUTLIERS_INLIERS/thresh=0.4/inliers --protocol /nobackup1/bjgbiesseck/datasets/doppelgangers_lookalikes/DoppelVer/ViSEProtocol.csv --ignore-missing-imgs --facial-attributes /nobackup1/bjgbiesseck/datasets/doppelgangers_lookalikes/DoppelVer/Images/CCA_Images_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs_FACE_ATTRIB'),
@@ -51,6 +58,7 @@ elif 'diolkos' in hostname:
                   ]
 
 elif 'cedro' in hostname:
+    # all 6 benchmarks
     benchmarks = [('hda_doppelganger',       '--network %s --model %s --target hda_doppelganger --data-dir /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/HDA-Doppelgaenger_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs --protocol /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/HDA-Doppelgaenger/verification_protocol_hdadoppelganger_frgc.txt --facial-attributes /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/HDA-Doppelgaenger_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs_FACE_ATTRIB --data-dir2 /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/FRGC/images_DETECTED_FACES_RETINAFACE_scales=[0.5]_nms=0.4/imgs --facial-attributes2 /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/FRGC/images_DETECTED_FACES_RETINAFACE_scales=[0.5]_nms=0.4/imgs_FACE_ATTRIB'),
                   ('doppelver_doppelganger', '--network %s --model %s --target doppelver_doppelganger --data-dir /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/DoppelVer/Images/CCA_Images_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs_FACE_EMBEDDINGS_OUTLIERS_INLIERS/thresh=0.4/inliers --protocol /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/DoppelVer/DoppelgangerProtocol.csv --ignore-missing-imgs --facial-attributes /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/DoppelVer/Images/CCA_Images_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs_FACE_ATTRIB'),
                   ('doppelver_vise',         '--network %s --model %s --target doppelver_vise --data-dir /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/DoppelVer/Images/CCA_Images_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs_FACE_EMBEDDINGS_OUTLIERS_INLIERS/thresh=0.4/inliers --protocol /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/DoppelVer/ViSEProtocol.csv --ignore-missing-imgs --facial-attributes /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/DoppelVer/Images/CCA_Images_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs_FACE_ATTRIB'),
@@ -98,11 +106,7 @@ models = [('R50/CASIA-Webface_merge_Synth_1000subj_Arc2Face_similarity=[50,69]',
           ]
 
 
-def parse_arguments():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--type', default='summary', help='\'summary\' or \'inference\'')
-    args = parser.parse_args()
-    return args
+
 
 
 def load_text_file(file_path):
@@ -214,12 +218,9 @@ for idx_tgt, (target, arguments) in enumerate(benchmarks):
             stderr    = result.stderr
             exit_code = result.returncode
 
-            # stdout = stdout.split('\n')
-            # stderr = stderr.split('\n')
-
-            # print('stdout:', stdout)
-            print('stderr:\n', stderr)
-            print('exit_code:', exit_code)
+            # print(f'stdout:\n{stdout}')
+            print(f'stderr:\n{stderr}')
+            print(f'exit_code: {exit_code}')
             # sys.exit(0)
 
             # results[target][model_name] = {'stdout': stdout, 'stderr': stderr, 'exit_code': exit_code}

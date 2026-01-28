@@ -58,14 +58,26 @@ elif 'diolkos' in hostname:
                   ]
 
 elif 'cedro' in hostname:
-    # all 6 benchmarks
-    benchmarks = [('hda_doppelganger',       '--network %s --model %s --target hda_doppelganger --data-dir /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/HDA-Doppelgaenger_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs --protocol /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/HDA-Doppelgaenger/verification_protocol_hdadoppelganger_frgc.txt --facial-attributes /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/HDA-Doppelgaenger_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs_FACE_ATTRIB --data-dir2 /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/FRGC/images_DETECTED_FACES_RETINAFACE_scales=[0.5]_nms=0.4/imgs --facial-attributes2 /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/FRGC/images_DETECTED_FACES_RETINAFACE_scales=[0.5]_nms=0.4/imgs_FACE_ATTRIB'),
-                  ('doppelver_doppelganger', '--network %s --model %s --target doppelver_doppelganger --data-dir /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/DoppelVer/Images/CCA_Images_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs_FACE_EMBEDDINGS_OUTLIERS_INLIERS/thresh=0.4/inliers --protocol /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/DoppelVer/DoppelgangerProtocol.csv --ignore-missing-imgs --facial-attributes /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/DoppelVer/Images/CCA_Images_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs_FACE_ATTRIB'),
-                  ('doppelver_vise',         '--network %s --model %s --target doppelver_vise --data-dir /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/DoppelVer/Images/CCA_Images_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs_FACE_EMBEDDINGS_OUTLIERS_INLIERS/thresh=0.4/inliers --protocol /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/DoppelVer/ViSEProtocol.csv --ignore-missing-imgs --facial-attributes /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/DoppelVer/Images/CCA_Images_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs_FACE_ATTRIB'),
-                  ('3d_tec_exp1',            '--network %s --model %s --target 3d_tec --data-dir /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/3D-Twins-Expression-Challenge_3D-TEC_DETECTED_FACES_RETINAFACE_scales=[0.5]_nms=0.4/imgs/textureimages --protocol /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/3D-Twins-Expression-Challenge_3D-TEC/exp1_gallery.txt --facial-attributes /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/3D-Twins-Expression-Challenge_3D-TEC_DETECTED_FACES_RETINAFACE_scales=[0.5]_nms=0.4/imgs/textureimages_FACE_ATTRIB'),
-                  ('3d_tec_exp3',            '--network %s --model %s --target 3d_tec --data-dir /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/3D-Twins-Expression-Challenge_3D-TEC_DETECTED_FACES_RETINAFACE_scales=[0.5]_nms=0.4/imgs/textureimages --protocol /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/3D-Twins-Expression-Challenge_3D-TEC/exp3_gallery.txt --facial-attributes /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/3D-Twins-Expression-Challenge_3D-TEC_DETECTED_FACES_RETINAFACE_scales=[0.5]_nms=0.4/imgs/textureimages_FACE_ATTRIB'),
-                  ('nd_twins',               '--network %s --model %s --target nd_twins --data-dir /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/ND-Twins-2009-2010/images_DETECTED_FACES_RETINAFACE_scales=[0.25]_nms=0.4/imgs --protocol /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/face_recognition/datasets/ND-Twins-2009-2010/TwinsChallenge_1.0.0/TwinsChallenge/data/TwinsPairTable.csv --facial-attributes /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/face_recognition/datasets/ND-Twins-2009-2010/images_DETECTED_FACES_RETINAFACE_scales=[0.25]_nms=0.4/imgs_FACE_ATTRIB'),
+    # all 6 benchmarks with facial attributes
+    # benchmarks = [('hda_doppelganger',       '--network %s --model %s --target hda_doppelganger --data-dir /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/HDA-Doppelgaenger_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs --protocol /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/HDA-Doppelgaenger/verification_protocol_hdadoppelganger_frgc.txt --facial-attributes /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/HDA-Doppelgaenger_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs_FACE_ATTRIB --data-dir2 /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/FRGC/images_DETECTED_FACES_RETINAFACE_scales=[0.5]_nms=0.4/imgs --facial-attributes2 /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/FRGC/images_DETECTED_FACES_RETINAFACE_scales=[0.5]_nms=0.4/imgs_FACE_ATTRIB'),
+    #               ('doppelver_doppelganger', '--network %s --model %s --target doppelver_doppelganger --data-dir /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/DoppelVer/Images/CCA_Images_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs_FACE_EMBEDDINGS_OUTLIERS_INLIERS/thresh=0.4/inliers --protocol /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/DoppelVer/DoppelgangerProtocol.csv --ignore-missing-imgs --facial-attributes /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/DoppelVer/Images/CCA_Images_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs_FACE_ATTRIB'),
+    #               ('doppelver_vise',         '--network %s --model %s --target doppelver_vise --data-dir /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/DoppelVer/Images/CCA_Images_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs_FACE_EMBEDDINGS_OUTLIERS_INLIERS/thresh=0.4/inliers --protocol /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/DoppelVer/ViSEProtocol.csv --ignore-missing-imgs --facial-attributes /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/DoppelVer/Images/CCA_Images_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs_FACE_ATTRIB'),
+    #               ('3d_tec_exp1',            '--network %s --model %s --target 3d_tec --data-dir /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/3D-Twins-Expression-Challenge_3D-TEC_DETECTED_FACES_RETINAFACE_scales=[0.5]_nms=0.4/imgs/textureimages --protocol /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/3D-Twins-Expression-Challenge_3D-TEC/exp1_gallery.txt --facial-attributes /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/3D-Twins-Expression-Challenge_3D-TEC_DETECTED_FACES_RETINAFACE_scales=[0.5]_nms=0.4/imgs/textureimages_FACE_ATTRIB'),
+    #               ('3d_tec_exp3',            '--network %s --model %s --target 3d_tec --data-dir /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/3D-Twins-Expression-Challenge_3D-TEC_DETECTED_FACES_RETINAFACE_scales=[0.5]_nms=0.4/imgs/textureimages --protocol /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/3D-Twins-Expression-Challenge_3D-TEC/exp3_gallery.txt --facial-attributes /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/3D-Twins-Expression-Challenge_3D-TEC_DETECTED_FACES_RETINAFACE_scales=[0.5]_nms=0.4/imgs/textureimages_FACE_ATTRIB'),
+    #               ('nd_twins',               '--network %s --model %s --target nd_twins --data-dir /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/ND-Twins-2009-2010/images_DETECTED_FACES_RETINAFACE_scales=[0.25]_nms=0.4/imgs --protocol /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/ND-Twins-2009-2010/TwinsChallenge_1.0.0/TwinsChallenge/data/TwinsPairTable.csv --facial-attributes /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/ND-Twins-2009-2010/images_DETECTED_FACES_RETINAFACE_scales=[0.25]_nms=0.4/imgs_FACE_ATTRIB'),
+    #               ]
+
+    # 4 benchmarks without facial attributes
+    benchmarks = [('hda_doppelganger',       '--network %s --model %s --target hda_doppelganger --data-dir /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/HDA-Doppelgaenger_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs --protocol /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/HDA-Doppelgaenger/verification_protocol_hdadoppelganger_frgc.txt --data-dir2 /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/FRGC/images_DETECTED_FACES_RETINAFACE_scales=[0.5]_nms=0.4/imgs'),
+                  ('doppelver_doppelganger', '--network %s --model %s --target doppelver_doppelganger --data-dir /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/DoppelVer/Images/CCA_Images_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs_FACE_EMBEDDINGS_OUTLIERS_INLIERS/thresh=0.4/inliers --protocol /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/DoppelVer/DoppelgangerProtocol.csv --ignore-missing-imgs'),
+                  ('doppelver_vise',         '--network %s --model %s --target doppelver_vise --data-dir /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/DoppelVer/Images/CCA_Images_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs_FACE_EMBEDDINGS_OUTLIERS_INLIERS/thresh=0.4/inliers --protocol /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/DoppelVer/ViSEProtocol.csv --ignore-missing-imgs'),
+                  ('nd_twins',               '--network %s --model %s --target nd_twins --data-dir /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/ND-Twins-2009-2010/images_DETECTED_FACES_RETINAFACE_scales=[0.25]_nms=0.4/imgs --protocol /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/ND-Twins-2009-2010/TwinsChallenge_1.0.0/TwinsChallenge/data/TwinsPairTable.csv'),
                   ]
+    
+    # benchmarks = [('hda_doppelganger',       '--network %s --model %s --target hda_doppelganger --data-dir /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/HDA-Doppelgaenger_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs --protocol /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/HDA-Doppelgaenger/verification_protocol_hdadoppelganger_frgc.txt --facial-attributes /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/HDA-Doppelgaenger_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs_FACE_ATTRIB --data-dir2 /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/FRGC/images_DETECTED_FACES_RETINAFACE_scales=[0.5]_nms=0.4/imgs --facial-attributes2 /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/FRGC/images_DETECTED_FACES_RETINAFACE_scales=[0.5]_nms=0.4/imgs_FACE_ATTRIB'),
+    #               ('doppelver_doppelganger', '--network %s --model %s --target doppelver_doppelganger --data-dir /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/DoppelVer/Images/CCA_Images_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs_FACE_EMBEDDINGS_OUTLIERS_INLIERS/thresh=0.4/inliers --protocol /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/DoppelVer/DoppelgangerProtocol.csv --ignore-missing-imgs --facial-attributes /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/DoppelVer/Images/CCA_Images_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs_FACE_ATTRIB'),
+    #               ('doppelver_vise',         '--network %s --model %s --target doppelver_vise --data-dir /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/DoppelVer/Images/CCA_Images_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs_FACE_EMBEDDINGS_OUTLIERS_INLIERS/thresh=0.4/inliers --protocol /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/DoppelVer/ViSEProtocol.csv --ignore-missing-imgs --facial-attributes /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/doppelgangers_lookalikes/DoppelVer/Images/CCA_Images_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs_FACE_ATTRIB')
+    #               ]
 
     # benchmarks = [('nd_twins',               '--network %s --model %s --target nd_twins --data-dir /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/ND-Twins-2009-2010/images_DETECTED_FACES_RETINAFACE_scales=[0.25]_nms=0.4/imgs --protocol /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/face_recognition/datasets/ND-Twins-2009-2010/TwinsChallenge_1.0.0/TwinsChallenge/data/TwinsPairTable.csv --facial-attributes /hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/datasets/face_recognition/datasets/ND-Twins-2009-2010/images_DETECTED_FACES_RETINAFACE_scales=[0.25]_nms=0.4/imgs_FACE_ATTRIB'),
     #               ]
@@ -102,7 +114,8 @@ else:
 # models = [('R50/CASIA-Webface_merge_Synth_subj_Arc2Face_similarity=[50,69]',  'r50', '/home/bjgbiesseck/GitHub/bjgbiesseck_insightface/recognition/arcface_torch/work_dirs/casiawebface_merge_Synth_subj_Arc2Face_similarity=[50,69]_r50/2025-12-11_19-13-30_GPU0/model.pt')
 #           ]
 
-models = [('R50/CASIA-Webface_merge_Synth_10572subj_Arc2Face_similarity=[50,69]',  'r50', '/home/bjgbiesseck/GitHub/bjgbiesseck_insightface/recognition/arcface_torch/work_dirs/casiawebface_merge_Synth_10572subj_Arc2Face_similarity=[50,69]_r50/2026-01-21_12-29-08_GPU0/model.pt')
+models = [('R50/CASIA-Webface_merge_Synth_137subj_Arc2Face_similarity=[50,59]',  'r50', '/home/bjgbiesseck/GitHub/bjgbiesseck_insightface/recognition/arcface_torch/work_dirs/casiawebface_merge_Synth_137subj_Arc2Face_similarity=[50,59]_r50/2026-01-26_22-46-10_GPU0/model.pt'),
+          ('R50/CASIA-Webface_merge_Synth_106subj_Arc2Face_similarity=[60,69]',  'r50', '/home/bjgbiesseck/GitHub/bjgbiesseck_insightface/recognition/arcface_torch/work_dirs/casiawebface_merge_Synth_106subj_Arc2Face_similarity=[60,69]_r50/2026-01-26_22-50-48_GPU0/model.pt')
           ]
 
 
@@ -248,28 +261,13 @@ for idx_tgt, (target, arguments) in enumerate(benchmarks):
 
 
 
-'''
-data = [
-    {"Name": "Alice",   "Age": 30, "City": "New York"},
-    {"Name": "Bob",     "Age": 25, "City": "Los Angeles"},
-    {"Name": "Charlie", "Age": 35, "City": "Chicago"},
-    {"Name": "Dave",    "Age": 28, "City": "Houston"}
-]
-
-data = [
-    {"Model": "R100/CASIA-Webface",    "hda_doppelganger": XX,    "doppelver_doppelganger": XX,    "doppelver_vise": XX,    "3d_tec": XX},
-    {"Model": "R100/MS1MV3",           "hda_doppelganger": XX,    "doppelver_doppelganger": XX,    "doppelver_vise": XX,    "3d_tec": XX},
-    {"Model": "R100/Glint360K",        "hda_doppelganger": XX,    "doppelver_doppelganger": XX,    "doppelver_vise": XX,    "3d_tec": XX},
-    {"Model": "R100/DCFace",           "hda_doppelganger": XX,    "doppelver_doppelganger": XX,    "doppelver_vise": XX,    "3d_tec": XX},
-]
-'''
 results_formatted = {}
 for idx_key, key in enumerate(results[benchmarks[0][0]][models[0][0]]):
     results_key = []
     for idx_model, (model_name, network, model_path) in enumerate(models):
         results_model = {'Model': model_name}
         for idx_tgt, (target, arguments) in enumerate(benchmarks):
-            print(f'idx_key={idx_key}/{len(results[benchmarks[0][0]][models[0][0]])}, idx_model={idx_model}/{len(models)}, idx_tgt={idx_tgt}/{len(benchmarks)}', '    key:', key, '    model_name:', model_name, '    target:', target, '    item:', results[target][model_name][key])
+            # print(f'idx_key={idx_key}/{len(results[benchmarks[0][0]][models[0][0]])}, idx_model={idx_model}/{len(models)}, idx_tgt={idx_tgt}/{len(benchmarks)}', '    key:', key, '    model_name:', model_name, '    target:', target, '\n', results[target][model_name][key])
 
             if not isinstance(results[target][model_name][key], dict): # general results
                 # print('    general')
@@ -282,19 +280,6 @@ for idx_key, key in enumerate(results[benchmarks[0][0]][models[0][0]]):
         results_key.append(results_model)
     print('---')
     results_formatted[key] = results_key
-            
-
-# print('results_formatted')
-# print(results_formatted)
-
-# results_formatted_json = json.dumps(results_formatted, indent=4)
-# print('results_formatted_json:')
-# print(results_formatted_json)
-
-# print('results:')
-# print(results)
-
-# sys.exit(0)
 
 metrics_to_save = ['Accuracy-Flip', 'TAR@FAR', 'EER', 'race', 'gender', 'age']
 for idx_metric, metric in enumerate(metrics_to_save):

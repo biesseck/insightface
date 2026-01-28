@@ -625,7 +625,7 @@ def calculate_roc_analyze_races(args, thresholds,
             else:
                 _, _, accuracy[fold_idx], _ = calculate_accuracy_analyze_races(
                     args, thresholds[best_threshold_index], dist[test_set],
-                    actual_issame[test_set], face_attrib_list=None, subj_list=None, races_combs=face_attrib_comb, style_clusters_data=None)
+                    actual_issame[test_set], races_list=None, subj_list=None, races_combs=face_attrib_comb, style_clusters_data=None)
 
     # avg_roc_metrics = None
     for attrib_key in face_attribs_dict:
@@ -1235,7 +1235,7 @@ def evaluate_analyze_races(args, path_dir_model, embeddings, actual_issame, face
     embeddings2 = embeddings[1::2]
 
     races_list_sorted = None
-    if not face_attribs_dict is None:
+    if not face_attribs_dict is None  and  not face_attribs_dict['race'] is None:
         races_list_sorted = np.array([sorted(races_pair) for races_pair in face_attribs_dict['race']])
 
     tpr, fpr, accuracy, avg_roc_metrics = calculate_roc_analyze_races(args, thresholds,
@@ -2065,14 +2065,15 @@ if __name__ == '__main__':
 
                 logger.info('[%s]EER: %1.5f    EER (thresh): %1.5f' % (ver_name_list[i], eer_mean, eer_threshold_mean))
 
-                for attrib in face_attribs_combs:
-                    logger.info('------')
-                    for attrib_val in face_attribs_combs[attrib]:
-                        attrib_val_format = attrib_val
-                        # attrib_val_format = attrib_val[:5]
-                        logger.info('[%s][%s]%s Acc: %1.5f+-%1.5f    [%s]%s TAR@FAR=%1.5f: %1.5f+-%1.5f' % \
-                                    (ver_name_list[i], attrib, attrib_val_format, avg_roc_metrics[attrib][attrib_val]['acc_mean'], avg_roc_metrics[attrib][attrib_val]['acc_std'], \
-                                                       attrib, attrib_val_format, avg_val_metrics[attrib][attrib_val]['far_mean'], avg_val_metrics[attrib][attrib_val]['val_mean'], avg_val_metrics[attrib][attrib_val]['val_std']))
+                if not face_attribs_combs is None  and  not face_attribs_combs['race'] is None:
+                    for attrib in face_attribs_combs:
+                        logger.info('------')
+                        for attrib_val in face_attribs_combs[attrib]:
+                            attrib_val_format = attrib_val
+                            # attrib_val_format = attrib_val[:5]
+                            logger.info('[%s][%s]%s Acc: %1.5f+-%1.5f    [%s]%s TAR@FAR=%1.5f: %1.5f+-%1.5f' % \
+                                        (ver_name_list[i], attrib, attrib_val_format, avg_roc_metrics[attrib][attrib_val]['acc_mean'], avg_roc_metrics[attrib][attrib_val]['acc_std'], \
+                                                        attrib, attrib_val_format, avg_val_metrics[attrib][attrib_val]['far_mean'], avg_val_metrics[attrib][attrib_val]['val_mean'], avg_val_metrics[attrib][attrib_val]['val_std']))
                     
                 
                 if not test_style_clusters_data is None:

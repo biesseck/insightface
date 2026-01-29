@@ -6,3 +6,6 @@ work_dirs*/*
 *.csv
 *.pth
 *.pt
+
+
+trained_models/*

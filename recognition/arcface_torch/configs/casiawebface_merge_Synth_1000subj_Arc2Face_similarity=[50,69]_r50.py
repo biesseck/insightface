@@ -16,8 +16,11 @@ config.sample_rate = 1.0
 config.fp16 = True
 config.momentum = 0.9
 config.weight_decay = 5e-4
+config.batch_size = 16
+# config.batch_size = 32
+# config.batch_size = 64
 # config.batch_size = 128
-config.batch_size = 256
+# config.batch_size = 256
 config.lr = 0.1
 config.verbose = 2000
 # config.verbose = 10
@@ -73,8 +76,8 @@ elif uname.nodename == 'cedro':
     # config.val_dataset_dir = ['/nobackup/unico/frcsyn_wacv2024/datasets/real/3_BUPT-BalancedFace/race_per_7000_crops_112x112']
     # config.val_protocol_path = ['/nobackup/unico/frcsyn_wacv2024/comparison_files/comparison_files/sub-tasks_1.1_1.2/bupt_comparison.txt']
 
-
-    config.path_other_dataset = '/hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/CASIA-WebFace/imgs_crops_112x112_FACE_EMBEDDINGS_newSynthIDs_Arc2Face_sim=[0.5,0.69]_DETECTED_FACES_RETINAFACE_scales=[1.0]_nms=0.4/imgs'
+    # config.path_other_dataset = '/hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/CASIA-WebFace/imgs_crops_112x112_FACE_EMBEDDINGS_newSynthIDs_Arc2Face_sim=[0.5,0.69]_DETECTED_FACES_RETINAFACE_scales=[1.0]_nms=0.4/imgs'
+    config.path_other_dataset = '/hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/CASIA-WebFace/imgs_crops_112x112_FACE_EMBEDDINGS_newSynthIDs_Arc2Face_sim=[0.5,0.69]_1000ids_DETECTED_FACES_RETINAFACE_scales=[1.0]_nms=0.4_RANDOM1'
 
 
 else:

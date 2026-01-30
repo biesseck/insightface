@@ -16,7 +16,7 @@ from backbones import get_model
 def parse_args():
     parser = argparse.ArgumentParser(description='')
     parser.add_argument('--network', type=str, default='r100', help='backbone network')
-    parser.add_argument('--weight', type=str, default='./trained_models/ms1mv3_arcface_r100_fp16/backbone.pth')
+    parser.add_argument('--weight', type=str, default='../trained_models/ms1mv3_arcface_r100_fp16/backbone.pth')
     parser.add_argument('--imgs', type=str, default='/hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/CASIA-WebFace/imgs_crops_112x112')
     parser.add_argument('--output-path', type=str, default='')
     parser.add_argument('--start-idx', type=int, default=0)
@@ -55,10 +55,15 @@ def get_all_files_in_path(folder_path, file_extension=['.jpg','.jpeg','.png'], p
     return file_list
 
 
+def get_subdirs_folder(root_path):
+    subfolders = [os.path.join(root_path, name) for name in os.listdir(root_path) if os.path.isdir(os.path.join(root_path, name))]
+    subfolders = natural_sort(subfolders)
+    return subfolders
+
+
 def load_normalize_img(img, device="cuda"):
     img = cv2.imread(img)
     img = cv2.resize(img, (112, 112))
-
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     img = np.transpose(img, (2, 0, 1))
     img = torch.from_numpy(img).unsqueeze(0).float()
@@ -72,6 +77,23 @@ def get_face_embedd(model, img):
     # embedd = model(img).numpy()
     embedd = model(img).cpu().numpy()
     return embedd
+
+
+def save_face_embedd(id_feat_img, output_path_id_feat):
+    if output_path_id_feat.endswith('.pt'):
+        torch.save(id_feat_img, output_path_id_feat)
+    elif output_path_id_feat.endswith('.npy'):
+        np.save(output_path_id_feat, id_feat_img)
+
+
+def load_face_embedd(path_id_feat):
+    if path_id_feat.endswith('.pt'):
+        id_feat_img = torch.load(path_id_feat)
+    elif path_id_feat.endswith('.npy'):
+        id_feat_img = np.load(path_id_feat)
+    return id_feat_img
+
+
 
 
 
@@ -89,44 +111,78 @@ if __name__ == '__main__':
     os.makedirs(args.output_path, exist_ok=True)
 
     print(f'Searching images in \'{args.imgs}\'')
-    imgs_paths = get_all_files_in_path(args.imgs)
-    print(f'Found {len(imgs_paths)} images\n------------------\n')
+    # imgs_paths = get_all_files_in_path(args.imgs)
+    subjs_folders_paths = get_subdirs_folder(args.imgs)
+    print(f'Found {len(subjs_folders_paths)} subjects\n------------------\n')
 
     total_elapsed_time = 0.0
-    for idx_path, path_img in enumerate(imgs_paths):
-        if idx_path >= args.start_idx:
+    for idx_subj_folder, path_subj_folder in enumerate(subjs_folders_paths):
+        if idx_subj_folder >= args.start_idx:
             start_time = time.time()
-            print(f'{idx_path}/{len(imgs_paths)} - Computing face embedding')
-            print(f'path_img: {path_img}')
-            img = load_normalize_img(path_img, device)
+            print(f'{idx_subj_folder}/{len(subjs_folders_paths)} - Computing face embedding')
+            print(f'subj: {os.path.basename(path_subj_folder)}')
 
-            id_feat_img = get_face_embedd(model, img)
+            subj_output_path = os.path.join(args.output_path, os.path.basename(path_subj_folder))
+            # print('subj_output_path:', subj_output_path)
+            os.makedirs(subj_output_path, exist_ok=True)
 
-            output_path_dir = os.path.dirname(path_img.replace(args.imgs, args.output_path))
-            print(f'output_path_dir: {output_path_dir}')
-            os.makedirs(output_path_dir, exist_ok=True)
+            imgs_paths = get_all_files_in_path(path_subj_folder)
+            subj_embedds = np.zeros((len(imgs_paths),512), dtype=float)
 
-            img_name, img_ext = os.path.splitext(os.path.basename(path_img))
-            # output_path_id_feat = os.path.join(output_path_dir, img_name+'_id_feat.pt')
-            output_path_id_feat = os.path.join(output_path_dir, img_name+'_embedding_r100_arcface.npy')
+            for idx_path, path_img in enumerate(imgs_paths):
+                if idx_path >= args.start_idx:
+                    start_time = time.time()
+                    # print(f'{idx_path}/{len(imgs_paths)} \'{path_img}\'', end='\r')
+                    
+                    img_name, img_ext = os.path.splitext(os.path.basename(path_img))
+                    # output_path_id_feat = os.path.join(subj_output_path, img_name+'_embedding_r100_arcface.pt')
+                    output_path_id_feat = os.path.join(subj_output_path, img_name+'_embedding_r100_arcface.npy')
 
-            print('output_path_id_feat:', output_path_id_feat)
-            if output_path_id_feat.endswith('.pt'):
-                torch.save(id_feat_img, output_path_id_feat)
-            elif output_path_id_feat.endswith('.npy'):
-                np.save(output_path_id_feat, id_feat_img)                
+                    if not os.path.isfile(output_path_id_feat):
+                        img = load_normalize_img(path_img, device)
+                        print('Computing and saving face embeddings...', end='\r')
+                        id_feat_img = get_face_embedd(model, img)
+
+                        # output_path_dir = os.path.dirname(path_img.replace(args.imgs, args.output_path))
+                        # print(f'output_path_dir: {output_path_dir}')
+                        # os.makedirs(output_path_dir, exist_ok=True)
+
+                        # print('output_path_id_feat:', output_path_id_feat)
+                        if output_path_id_feat.endswith('.pt'):
+                            torch.save(id_feat_img, output_path_id_feat)
+                        elif output_path_id_feat.endswith('.npy'):
+                            np.save(output_path_id_feat, id_feat_img)                
+
+                    else:
+                        # print('Loading embedding already saved:', output_path_id_feat, end='\r')
+                        print('Loading embedding already saved', end='\r')
+                        id_feat_img = load_face_embedd(output_path_id_feat)
+                    
+                    subj_embedds[idx_path] = id_feat_img
+                    # print('id_feat_img:', id_feat_img)
+                    # print('id_feat_img.shape:', id_feat_img.shape)
+                    # sys.exit(0)
+            print()
+
+            output_path_mean_embedd = os.path.join(subj_output_path, f'{os.path.basename(path_subj_folder)}_mean_embedding_r100_arcface.npy')
+            if not os.path.isfile(output_path_mean_embedd):
+                subj_embedd_mean = subj_embedds.mean(axis=0, keepdims=True)
+                print(f'Saving mean embedding: \'{output_path_mean_embedd}\'')
+                save_face_embedd(subj_embedd_mean, output_path_mean_embedd)
 
             elapsed_time = time.time()-start_time
             total_elapsed_time += elapsed_time
-            avg_sample_time = total_elapsed_time / ((idx_path-args.start_idx)+1)
-            estimated_time = avg_sample_time * (len(imgs_paths)-(idx_path+1))
-            print("Elapsed time: %.3fs" % elapsed_time)
-            print("Avg elapsed time: %.3fs" % avg_sample_time)
-            print("Total elapsed time: %.3fs,  %.3fm,  %.3fh" % (total_elapsed_time, total_elapsed_time/60, total_elapsed_time/3600))
-            print("Estimated Time to Completion (ETC): %.3fs,  %.3fm,  %.3fh" % (estimated_time, estimated_time/60, estimated_time/3600))
+            avg_sample_time = total_elapsed_time / ((idx_subj_folder-args.start_idx)+1)
+            estimated_time = avg_sample_time * (len(imgs_paths)-(idx_subj_folder+1))
+            print("    Elapsed time: %.3fs" % elapsed_time)
+            print("    Avg elapsed time: %.3fs" % avg_sample_time)
+            print("    Total elapsed time: %.3fs,  %.3fm,  %.3fh" % (total_elapsed_time, total_elapsed_time/60, total_elapsed_time/3600))
+            print("    Estimated Time to Completion (ETC): %.3fs,  %.3fm,  %.3fh" % (estimated_time, estimated_time/60, estimated_time/3600))
             print('--------------')
+            # sys.exit(0)
 
         else:
-            print(f'Skipping indices: {idx_path}/{len(imgs_paths)}', end='\r')
+            print(f'Skipping indices: {idx_subj_folder}/{len(imgs_paths)}', end='\r')
+
 
     print('\nFinished!')

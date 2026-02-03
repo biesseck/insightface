@@ -130,50 +130,48 @@ if __name__ == '__main__':
             subj_embedds = np.zeros((len(imgs_paths),512), dtype=float)
 
             for idx_path, path_img in enumerate(imgs_paths):
-                if idx_path >= args.start_idx:
-                    start_time = time.time()
-                    # print(f'{idx_path}/{len(imgs_paths)} \'{path_img}\'', end='\r')
-                    
-                    img_name, img_ext = os.path.splitext(os.path.basename(path_img))
-                    # output_path_id_feat = os.path.join(subj_output_path, img_name+'_embedding_r100_arcface.pt')
-                    output_path_id_feat = os.path.join(subj_output_path, img_name+'_embedding_r100_arcface.npy')
+                img_name, img_ext = os.path.splitext(os.path.basename(path_img))
+                # output_path_id_feat = os.path.join(subj_output_path, img_name+'_embedding_r100_arcface.pt')
+                output_path_id_feat = os.path.join(subj_output_path, img_name+'_embedding_r100_arcface.npy')
 
-                    if not os.path.isfile(output_path_id_feat):
-                        img = load_normalize_img(path_img, device)
-                        print('Computing and saving face embeddings...', end='\r')
-                        id_feat_img = get_face_embedd(model, img)
+                if not os.path.isfile(output_path_id_feat):
+                    img = load_normalize_img(path_img, device)
+                    print(f"{idx_path}/{len(imgs_paths)} Computing and saving sample face embeddings", end='\r')
+                    id_feat_img = get_face_embedd(model, img)
 
-                        # output_path_dir = os.path.dirname(path_img.replace(args.imgs, args.output_path))
-                        # print(f'output_path_dir: {output_path_dir}')
-                        # os.makedirs(output_path_dir, exist_ok=True)
+                    # output_path_dir = os.path.dirname(path_img.replace(args.imgs, args.output_path))
+                    # print(f'output_path_dir: {output_path_dir}')
+                    # os.makedirs(output_path_dir, exist_ok=True)
 
-                        # print('output_path_id_feat:', output_path_id_feat)
-                        if output_path_id_feat.endswith('.pt'):
-                            torch.save(id_feat_img, output_path_id_feat)
-                        elif output_path_id_feat.endswith('.npy'):
-                            np.save(output_path_id_feat, id_feat_img)                
+                    # print('output_path_id_feat:', output_path_id_feat)
+                    if output_path_id_feat.endswith('.pt'):
+                        torch.save(id_feat_img, output_path_id_feat)
+                    elif output_path_id_feat.endswith('.npy'):
+                        np.save(output_path_id_feat, id_feat_img)                
 
-                    else:
-                        # print('Loading embedding already saved:', output_path_id_feat, end='\r')
-                        print('Loading embedding already saved', end='\r')
-                        id_feat_img = load_face_embedd(output_path_id_feat)
-                    
-                    subj_embedds[idx_path] = id_feat_img
-                    # print('id_feat_img:', id_feat_img)
-                    # print('id_feat_img.shape:', id_feat_img.shape)
-                    # sys.exit(0)
+                else:
+                    # print('Loading embedding already saved:', output_path_id_feat, end='\r')
+                    print(f"{idx_path}/{len(imgs_paths)} Loading sample face embedding already saved", end='\r')
+                    id_feat_img = load_face_embedd(output_path_id_feat)
+                
+                subj_embedds[idx_path] = id_feat_img
+                # print('id_feat_img:', id_feat_img)
+                # print('id_feat_img.shape:', id_feat_img.shape)
+                # sys.exit(0)
             print()
 
             output_path_mean_embedd = os.path.join(subj_output_path, f'{os.path.basename(path_subj_folder)}_mean_embedding_r100_arcface.npy')
             if not os.path.isfile(output_path_mean_embedd):
                 subj_embedd_mean = subj_embedds.mean(axis=0, keepdims=True)
-                print(f'Saving mean embedding: \'{output_path_mean_embedd}\'')
+                print(f'Saving mean subject embedding: \'{output_path_mean_embedd}\'')
                 save_face_embedd(subj_embedd_mean, output_path_mean_embedd)
+            else:
+                print(f'Mean subject embedding already saved: \'{output_path_mean_embedd}\'')
 
             elapsed_time = time.time()-start_time
             total_elapsed_time += elapsed_time
             avg_sample_time = total_elapsed_time / ((idx_subj_folder-args.start_idx)+1)
-            estimated_time = avg_sample_time * (len(imgs_paths)-(idx_subj_folder+1))
+            estimated_time = avg_sample_time * (len(subjs_folders_paths)-(idx_subj_folder+1))
             print("    Elapsed time: %.3fs" % elapsed_time)
             print("    Avg elapsed time: %.3fs" % avg_sample_time)
             print("    Total elapsed time: %.3fs,  %.3fm,  %.3fh" % (total_elapsed_time, total_elapsed_time/60, total_elapsed_time/3600))
@@ -182,7 +180,7 @@ if __name__ == '__main__':
             # sys.exit(0)
 
         else:
-            print(f'Skipping indices: {idx_subj_folder}/{len(imgs_paths)}', end='\r')
+            print(f'Skipping indices: {idx_subj_folder}/{len(subjs_folders_paths)}', end='\r')
 
 
     print('\nFinished!')

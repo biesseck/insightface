@@ -158,8 +158,8 @@ def main(args):
 
     # Load 1 sample to get its size
     sample_path = find_files_by_extension(subjects_paths[0], args.mean_embedd_str, args.file_ext, ignore_file_with='')
-    assert len(sample_path) > 0, f'Error, no such file with substr \'{args.mean_embedd_str}\' and ext \'{args.file_ext}\' in dir \'{subj_path}\''
-    assert len(sample_path) < 2, f'Error, more than 1 file with substr \'{args.mean_embedd_str}\' and ext \'{args.file_ext}\' in dir \'{subj_path}\': {sample_path}'
+    assert len(sample_path) > 0, f'Error, no such file with substr \'{args.mean_embedd_str}\' and ext \'{args.file_ext}\' in dir \'{subjects_paths[0]}\''
+    assert len(sample_path) < 2, f'Error, more than 1 file with substr \'{args.mean_embedd_str}\' and ext \'{args.file_ext}\' in dir \'{subjects_paths[0]}\': {sample_path}'
     sample_path = sample_path[0]
     data = load_sample(sample_path)
     # print('data.shape:', data.shape, '    torch.squeeze(data).shape[0]:', torch.squeeze(data).shape[0])

@@ -22,20 +22,20 @@ def parse_arguments():
 
 if 'duo' in hostname:
     # all 6 benchmarks
-    benchmarks = [('hda_doppelganger',       '--network %s --model %s --target hda_doppelganger --data-dir /nobackup3/bjgbiesseck/doppelgangers_lookalikes/HDA-Doppelgaenger_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs --protocol /nobackup3/bjgbiesseck/doppelgangers_lookalikes/HDA-Doppelgaenger/verification_protocol_hdadoppelganger_frgc.txt --facial-attributes /nobackup3/bjgbiesseck/doppelgangers_lookalikes/HDA-Doppelgaenger_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs_FACE_ATTRIB --data-dir2 /nobackup3/bjgbiesseck/MICA/FRGC/images_DETECTED_FACES_RETINAFACE_scales=[0.5]_nms=0.4/imgs --facial-attributes2 /nobackup3/bjgbiesseck/MICA/FRGC/images_DETECTED_FACES_RETINAFACE_scales=[0.5]_nms=0.4/imgs_FACE_ATTRIB'),
-                  ('doppelver_doppelganger', '--network %s --model %s --target doppelver_doppelganger --data-dir /nobackup3/bjgbiesseck/doppelgangers_lookalikes/DoppelVer/Images/CCA_Images_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs_FACE_EMBEDDINGS_OUTLIERS_INLIERS/thresh=0.4/inliers --protocol /nobackup3/bjgbiesseck/doppelgangers_lookalikes/DoppelVer/DoppelgangerProtocol.csv --ignore-missing-imgs --facial-attributes /nobackup3/bjgbiesseck/doppelgangers_lookalikes/DoppelVer/Images/CCA_Images_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs_FACE_ATTRIB'),
-                  ('doppelver_vise',         '--network %s --model %s --target doppelver_vise --data-dir /nobackup3/bjgbiesseck/doppelgangers_lookalikes/DoppelVer/Images/CCA_Images_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs_FACE_EMBEDDINGS_OUTLIERS_INLIERS/thresh=0.4/inliers --protocol /nobackup3/bjgbiesseck/doppelgangers_lookalikes/DoppelVer/ViSEProtocol.csv --ignore-missing-imgs --facial-attributes /nobackup3/bjgbiesseck/doppelgangers_lookalikes/DoppelVer/Images/CCA_Images_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs_FACE_ATTRIB'),
-                  ('3d_tec',                 '--network %s --model %s --target 3d_tec --data-dir /nobackup3/bjgbiesseck/3D-Twins-Expression-Challenge_3D-TEC_DETECTED_FACES_RETINAFACE_scales=[0.5]_nms=0.4/imgs/textureimages --protocol /nobackup3/bjgbiesseck/3D-Twins-Expression-Challenge_3D-TEC/exp1_gallery.txt --facial-attributes /nobackup3/bjgbiesseck/3D-Twins-Expression-Challenge_3D-TEC_DETECTED_FACES_RETINAFACE_scales=[0.5]_nms=0.4/imgs/textureimages_FACE_ATTRIB'),
-                  ('3d_tec',                 '--network %s --model %s --target 3d_tec --data-dir /nobackup3/bjgbiesseck/3D-Twins-Expression-Challenge_3D-TEC_DETECTED_FACES_RETINAFACE_scales=[0.5]_nms=0.4/imgs/textureimages --protocol /nobackup3/bjgbiesseck/3D-Twins-Expression-Challenge_3D-TEC/exp3_gallery.txt --facial-attributes /nobackup3/bjgbiesseck/3D-Twins-Expression-Challenge_3D-TEC_DETECTED_FACES_RETINAFACE_scales=[0.5]_nms=0.4/imgs/textureimages_FACE_ATTRIB'),
-                  ('nd_twins',               '--network %s --model %s --target nd_twins --data-dir /nobackup3/bjgbiesseck/ND-Twins-2009-2010/images_DETECTED_FACES_RETINAFACE_scales=[0.25]_nms=0.4/imgs --protocol /nobackup3/bjgbiesseck/ND-Twins-2009-2010/TwinsChallenge_1.0.0/TwinsChallenge/data/TwinsPairTable.csv --facial-attributes /nobackup3/bjgbiesseck/ND-Twins-2009-2010/images_DETECTED_FACES_RETINAFACE_scales=[0.25]_nms=0.4/imgs_FACE_ATTRIB'),
-                 ]
+    # benchmarks = [('hda_doppelganger',       '--network %s --model %s --target hda_doppelganger --data-dir /nobackup3/bjgbiesseck/doppelgangers_lookalikes/HDA-Doppelgaenger_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs --protocol /nobackup3/bjgbiesseck/doppelgangers_lookalikes/HDA-Doppelgaenger/verification_protocol_hdadoppelganger_frgc.txt --facial-attributes /nobackup3/bjgbiesseck/doppelgangers_lookalikes/HDA-Doppelgaenger_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs_FACE_ATTRIB --data-dir2 /nobackup3/bjgbiesseck/MICA/FRGC/images_DETECTED_FACES_RETINAFACE_scales=[0.5]_nms=0.4/imgs --facial-attributes2 /nobackup3/bjgbiesseck/MICA/FRGC/images_DETECTED_FACES_RETINAFACE_scales=[0.5]_nms=0.4/imgs_FACE_ATTRIB'),
+    #               ('doppelver_doppelganger', '--network %s --model %s --target doppelver_doppelganger --data-dir /nobackup3/bjgbiesseck/doppelgangers_lookalikes/DoppelVer/Images/CCA_Images_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs_FACE_EMBEDDINGS_OUTLIERS_INLIERS/thresh=0.4/inliers --protocol /nobackup3/bjgbiesseck/doppelgangers_lookalikes/DoppelVer/DoppelgangerProtocol.csv --ignore-missing-imgs --facial-attributes /nobackup3/bjgbiesseck/doppelgangers_lookalikes/DoppelVer/Images/CCA_Images_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs_FACE_ATTRIB'),
+    #               ('doppelver_vise',         '--network %s --model %s --target doppelver_vise --data-dir /nobackup3/bjgbiesseck/doppelgangers_lookalikes/DoppelVer/Images/CCA_Images_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs_FACE_EMBEDDINGS_OUTLIERS_INLIERS/thresh=0.4/inliers --protocol /nobackup3/bjgbiesseck/doppelgangers_lookalikes/DoppelVer/ViSEProtocol.csv --ignore-missing-imgs --facial-attributes /nobackup3/bjgbiesseck/doppelgangers_lookalikes/DoppelVer/Images/CCA_Images_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs_FACE_ATTRIB'),
+    #               ('3d_tec',                 '--network %s --model %s --target 3d_tec --data-dir /nobackup3/bjgbiesseck/3D-Twins-Expression-Challenge_3D-TEC_DETECTED_FACES_RETINAFACE_scales=[0.5]_nms=0.4/imgs/textureimages --protocol /nobackup3/bjgbiesseck/3D-Twins-Expression-Challenge_3D-TEC/exp1_gallery.txt --facial-attributes /nobackup3/bjgbiesseck/3D-Twins-Expression-Challenge_3D-TEC_DETECTED_FACES_RETINAFACE_scales=[0.5]_nms=0.4/imgs/textureimages_FACE_ATTRIB'),
+    #               ('3d_tec',                 '--network %s --model %s --target 3d_tec --data-dir /nobackup3/bjgbiesseck/3D-Twins-Expression-Challenge_3D-TEC_DETECTED_FACES_RETINAFACE_scales=[0.5]_nms=0.4/imgs/textureimages --protocol /nobackup3/bjgbiesseck/3D-Twins-Expression-Challenge_3D-TEC/exp3_gallery.txt --facial-attributes /nobackup3/bjgbiesseck/3D-Twins-Expression-Challenge_3D-TEC_DETECTED_FACES_RETINAFACE_scales=[0.5]_nms=0.4/imgs/textureimages_FACE_ATTRIB'),
+    #               ('nd_twins',               '--network %s --model %s --target nd_twins --data-dir /nobackup3/bjgbiesseck/ND-Twins-2009-2010/images_DETECTED_FACES_RETINAFACE_scales=[0.25]_nms=0.4/imgs --protocol /nobackup3/bjgbiesseck/ND-Twins-2009-2010/TwinsChallenge_1.0.0/TwinsChallenge/data/TwinsPairTable.csv --facial-attributes /nobackup3/bjgbiesseck/ND-Twins-2009-2010/images_DETECTED_FACES_RETINAFACE_scales=[0.25]_nms=0.4/imgs_FACE_ATTRIB'),
+    #              ]
 
     # benchmarks = [('hda_doppelganger',       '--network %s --model %s --target hda_doppelganger --data-dir /nobackup3/bjgbiesseck/doppelgangers_lookalikes/HDA-Doppelgaenger_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs --protocol /nobackup3/bjgbiesseck/doppelgangers_lookalikes/HDA-Doppelgaenger/verification_protocol_hdadoppelganger_frgc.txt --facial-attributes /nobackup3/bjgbiesseck/doppelgangers_lookalikes/HDA-Doppelgaenger_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs_FACE_ATTRIB --data-dir2 /nobackup3/bjgbiesseck/MICA/FRGC/images_DETECTED_FACES_RETINAFACE_scales=[0.5]_nms=0.4/imgs --facial-attributes2 /nobackup3/bjgbiesseck/MICA/FRGC/images_DETECTED_FACES_RETINAFACE_scales=[0.5]_nms=0.4/imgs_FACE_ATTRIB'),
     #               ('3d_tec_exp1',            '--network %s --model %s --target 3d_tec --data-dir /nobackup3/bjgbiesseck/3D-Twins-Expression-Challenge_3D-TEC_DETECTED_FACES_RETINAFACE_scales=[0.5]_nms=0.4/imgs/textureimages --protocol /nobackup3/bjgbiesseck/3D-Twins-Expression-Challenge_3D-TEC/exp1_gallery.txt --facial-attributes /nobackup3/bjgbiesseck/3D-Twins-Expression-Challenge_3D-TEC_DETECTED_FACES_RETINAFACE_scales=[0.5]_nms=0.4/imgs/textureimages_FACE_ATTRIB')
     #               ]
 
-    # benchmarks = [('hda_doppelganger',       '--network %s --model %s --target hda_doppelganger --data-dir /nobackup3/bjgbiesseck/doppelgangers_lookalikes/HDA-Doppelgaenger_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs --protocol /nobackup3/bjgbiesseck/doppelgangers_lookalikes/HDA-Doppelgaenger/verification_protocol_hdadoppelganger_frgc.txt --facial-attributes /nobackup3/bjgbiesseck/doppelgangers_lookalikes/HDA-Doppelgaenger_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs_FACE_ATTRIB --data-dir2 /nobackup3/bjgbiesseck/MICA/FRGC/images_DETECTED_FACES_RETINAFACE_scales=[0.5]_nms=0.4/imgs --facial-attributes2 /nobackup3/bjgbiesseck/MICA/FRGC/images_DETECTED_FACES_RETINAFACE_scales=[0.5]_nms=0.4/imgs_FACE_ATTRIB')
-    #               ]
+    benchmarks = [('hda_doppelganger',       '--network %s --model %s --target hda_doppelganger --data-dir /nobackup3/bjgbiesseck/doppelgangers_lookalikes/HDA-Doppelgaenger_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs --protocol /nobackup3/bjgbiesseck/doppelgangers_lookalikes/HDA-Doppelgaenger/verification_protocol_hdadoppelganger_frgc.txt --facial-attributes /nobackup3/bjgbiesseck/doppelgangers_lookalikes/HDA-Doppelgaenger_DETECTED_FACES_RETINAFACE_scales=[1.0,0.5,0.25]_nms=0.4/imgs_FACE_ATTRIB --data-dir2 /nobackup3/bjgbiesseck/MICA/FRGC/images_DETECTED_FACES_RETINAFACE_scales=[0.5]_nms=0.4/imgs --facial-attributes2 /nobackup3/bjgbiesseck/MICA/FRGC/images_DETECTED_FACES_RETINAFACE_scales=[0.5]_nms=0.4/imgs_FACE_ATTRIB')
+                  ]
 
 elif 'diolkos' in hostname:
     # all 6 benchmarks
@@ -141,7 +141,7 @@ def save_list_as_csv_table(data, csv_file_path):
 def parse_stderr_output(lines, target, face_attribs):
     general_results = True
     results = {}
-    if lines is str:
+    if type(lines) is str:
         lines = lines.strip().split('\n')
     for line in lines:
         # print('line:', line)
@@ -192,7 +192,6 @@ for idx_tgt, (target, arguments) in enumerate(benchmarks):
         print(f'target={idx_tgt}/{len(benchmarks)}, model={idx_model}/{len(models)} - target: {target}, model_name: {model_name}')
             
         if args.type == 'summary':
-
             path_dir_model = os.path.join(os.path.dirname(model_path), f'eval_{target.lower()}')
             path_file_results = os.path.join(path_dir_model, 'results_logs')
             if '--protocol' in arguments:
@@ -204,18 +203,11 @@ for idx_tgt, (target, arguments) in enumerate(benchmarks):
 
             if os.path.isfile(path_file_results):
                 results_lines = load_text_file(path_file_results)
-                # print('results_lines:', results_lines)
+                # print('results_lines:\n', results_lines)
 
                 parsed_results = parse_stderr_output(results_lines, target, face_attribs)
                 print('parsed_results:')
                 print(parsed_results)
-
-                parsed_results_json = json.dumps(parsed_results, indent=4)
-                # print('parsed_results_json:')
-                # print(parsed_results_json)
-                # print('type(parsed_results_json):', type(parsed_results_json))
-
-            results[target][model_name] = parsed_results
 
 
         elif args.type == 'inference':
@@ -227,8 +219,8 @@ for idx_tgt, (target, arguments) in enumerate(benchmarks):
             print(' '.join(cmd_final))
             result = subprocess.run(cmd_final, capture_output=True, text=True)
 
-            stdout    = result.stdout
-            stderr    = result.stderr
+            stdout    = result.stdout.strip()
+            stderr    = result.stderr.strip()
             exit_code = result.returncode
 
             # print(f'stdout:\n{stdout}')
@@ -237,30 +229,23 @@ for idx_tgt, (target, arguments) in enumerate(benchmarks):
             # sys.exit(0)
 
             # results[target][model_name] = {'stdout': stdout, 'stderr': stderr, 'exit_code': exit_code}
-            results[target][model_name] = {'stderr': stderr}
+            # results[target][model_name] = {'stderr': stderr}
+            
+            parsed_results = parse_stderr_output(stderr, target, face_attribs)
+        
+        
+        results[target][model_name] = parsed_results
+        # parsed_results = parse_stderr_output(results[target][model_name]['stderr'], target)
+        # print('parsed_results:')
+        # print(parsed_results)
 
-            # parsed_results = parse_stderr_output(results[target][model_name]['stderr'], target)
-            # print('parsed_results:')
-            # print(parsed_results)
-
-            print('-----')
+        print('-----')
     print('===================')
 
 
 
-# print('results:')
-# print(results)
-# results_json = json.dumps(results, indent=4)
-# results_json = json.dumps(results)
-# print('results_json:')
-# print(results_json)
-# print('\n')
-# with open("results.json", "w") as outfile:
-#     outfile.write(results_json)
-# sys.exit(0)
 
-
-
+print('Formatting results')
 results_formatted = {}
 for idx_key, key in enumerate(results[benchmarks[0][0]][models[0][0]]):
     results_key = []
@@ -278,7 +263,7 @@ for idx_key, key in enumerate(results[benchmarks[0][0]][models[0][0]]):
                 results_model[target] = results[target][model_name][key]
 
         results_key.append(results_model)
-    print('---')
+    # print('---')
     results_formatted[key] = results_key
 
 metrics_to_save = ['Accuracy-Flip', 'TAR@FAR', 'EER', 'race', 'gender', 'age']

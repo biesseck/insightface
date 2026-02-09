@@ -1800,8 +1800,8 @@ def get_base_root(current_path="", target_root_name=""):
 def update_files_paths(data_set, args):
     samples_orig_paths_list   = data_set['samples_orig_paths_list']
     samples_update_paths_list = data_set['samples_update_paths_list']
-    new_samples_update_paths_list = np.empty(samples_update_paths_list.shape, dtype='U512')
     if not os.path.isfile(samples_update_paths_list[0][0]):
+        new_samples_update_paths_list = np.empty(samples_update_paths_list.shape, dtype='U512')
         for idx_pair, pair_samples_paths in enumerate(samples_update_paths_list):
             new_pair_samples_paths = np.array(['']*len(pair_samples_paths), dtype='U512')
             for idx_file, file_path in enumerate(pair_samples_paths):
@@ -1817,7 +1817,7 @@ def update_files_paths(data_set, args):
                 # samples_update_paths_list[idx_pair][idx_file] = new_file_path
                 new_pair_samples_paths[idx_file] = new_file_path
             new_samples_update_paths_list[idx_pair] = new_pair_samples_paths
-    data_set['samples_update_paths_list'] = new_samples_update_paths_list
+        data_set['samples_update_paths_list'] = new_samples_update_paths_list
     return data_set
 
 

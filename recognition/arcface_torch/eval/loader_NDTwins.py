@@ -283,9 +283,9 @@ class Loader_NDTwins:
         print('    Done')
 
         issame_list               = np.array([bool(pairs_update[i]['pair_label']) for i in range(len(pairs_update))])
-        subj_list                 = np.array([(pairs_update[i]['sample0_subj'], pairs_update[i]['sample1_subj']) for i in range(len(pairs_update))])
-        samples_orig_paths_list   = np.array([(pairs_orig[i]['sample0'], pairs_orig[i]['sample1']) for i in range(len(pairs_orig))])
-        samples_update_paths_list = np.array([(pairs_update[i]['sample0'], pairs_update[i]['sample1']) for i in range(len(pairs_update))])
+        subj_list                 = np.array([(pairs_update[i]['sample0_subj'], pairs_update[i]['sample1_subj']) for i in range(len(pairs_update))], dtype='U512')
+        samples_orig_paths_list   = np.array([(pairs_orig[i]['sample0'], pairs_orig[i]['sample1']) for i in range(len(pairs_orig))], dtype='U512')
+        samples_update_paths_list = np.array([(pairs_update[i]['sample0'], pairs_update[i]['sample1']) for i in range(len(pairs_update))], dtype='U512')
 
         for idx in range(len(pairs_update) * 2):
             # _bin = bins[idx]

@@ -30,6 +30,7 @@ def natural_sort(l):
 
 def get_all_files_paths_with_dir_classes(folder_path, file_extension=['.jpg','.jpeg','.png'], pattern=''):
     file_list = []
+    if isinstance(file_extension, str): file_extension = [file_extension]
     for root, _, files in os.walk(folder_path):
         for filename in files:
             path_file = os.path.join(root, filename)

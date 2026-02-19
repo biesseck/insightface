@@ -29,14 +29,20 @@ config.dali = False
 if uname.nodename == 'duo':
     # config.rec = "/train_tmp/faces_emore"
     # config.rec = '/datasets2/frcsyn_wacv2024/datasets/real/1_CASIA-WebFace/faces_webface_112x112'     # duo
-    config.rec = '/datasets2/frcsyn_wacv2024/datasets/real/1_CASIA-WebFace/imgs_crops_112x112'          # duo
+    config.rec = '/nobackup3/bjgbiesseck/CASIA-Webface/imgs_crops_112x112'          # duo
 
     # config.val_targets = ['lfw', 'cfp_fp', "agedb_30"]
     # config.val_targets = ['']
     # config.val_targets = ['bupt']
-    config.val_targets = ['/datasets2/frcsyn_wacv2024/datasets/real/1_CASIA-WebFace/faces_webface_112x112/lfw.bin', '/datasets2/frcsyn_wacv2024/datasets/real/1_CASIA-WebFace/faces_webface_112x112/cfp_fp.bin', '/datasets2/frcsyn_wacv2024/datasets/real/1_CASIA-WebFace/faces_webface_112x112/agedb_30.bin', 'bupt']
-    config.val_dataset_dir = ['/datasets2/frcsyn_wacv2024/datasets/real/3_BUPT-BalancedFace/race_per_7000_crops_112x112']
-    config.val_protocol_path = ['/datasets2/frcsyn_wacv2024/comparison_files/comparison_files/sub-tasks_1.1_1.2/bupt_comparison.txt']
+    
+    # config.val_targets = ['/datasets2/frcsyn_wacv2024/datasets/real/1_CASIA-WebFace/faces_webface_112x112/lfw.bin', '/datasets2/frcsyn_wacv2024/datasets/real/1_CASIA-WebFace/faces_webface_112x112/cfp_fp.bin', '/datasets2/frcsyn_wacv2024/datasets/real/1_CASIA-WebFace/faces_webface_112x112/agedb_30.bin', 'bupt']
+    # config.val_dataset_dir = ['/datasets2/frcsyn_wacv2024/datasets/real/3_BUPT-BalancedFace/race_per_7000_crops_112x112']
+    # config.val_protocol_path = ['/datasets2/frcsyn_wacv2024/comparison_files/comparison_files/sub-tasks_1.1_1.2/bupt_comparison.txt']
+
+    config.val_targets = ['/nobackup3/bjgbiesseck/CASIA-Webface/faces_webface_112x112/lfw.bin', '/nobackup3/bjgbiesseck/CASIA-Webface/faces_webface_112x112/cfp_fp.bin', '/nobackup3/bjgbiesseck/CASIA-Webface/faces_webface_112x112/agedb_30.bin']
+    
+    config.path_other_dataset = '/nobackup3/bjgbiesseck/CASIA-Webface/imgs_crops_112x112_FACE_EMBEDDINGS_R100_WebFace42M_ArcFace_newSynthIDs_Arc2Face_sim=[0.5,0.69]_110ids_DETECTED_FACES_RETINAFACE_scales=[1.0]_nms=0.4/imgs'
+
 
 elif uname.nodename == 'diolkos':
     config.rec = '/nobackup/unico/datasets/face_recognition/1_CASIA-WebFace/imgs_crops_112x112'   # diolkos
@@ -51,6 +57,7 @@ elif uname.nodename == 'diolkos':
 
 
     config.path_subjs_list_to_merge = '/nobackup/unico/datasets/face_recognition/1_CASIA-WebFace/merge_with_dataset_MS-Celeb-1M-ms1m-retinaface-t1-imgs_FACE_EMBEDDINGS_sim-range=[0.5,0.69]/dict_paths_new_subjs_base_subjs.json'
+
 
 elif uname.nodename == 'cedro':
     config.rec = '/hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/CASIA-WebFace/imgs_crops_112x112'

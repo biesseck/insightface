@@ -182,7 +182,7 @@ def main(args):
     # os.makedirs(output_path, exist_ok=True)
 
     prefix_output_filename = 'INTRACLASS_SIMILARITIES'
-    path_precomputed_histograms = os.path.join(output_path, f'{prefix_output_filename}_computed_data.pkl')
+    path_precomputed_histograms = os.path.join(output_path, f'{prefix_output_filename}_{os.path.basename(dataset_path)}.pkl')
     
     if args.compute_from_scratch or not os.path.isfile(path_precomputed_histograms):
         print('dataset_path:', dataset_path)

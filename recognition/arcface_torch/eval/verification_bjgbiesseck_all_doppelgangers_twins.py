@@ -9,6 +9,7 @@ from io import StringIO
 import json
 import csv
 import socket
+import time
 
 hostname = socket.gethostname()
 
@@ -111,7 +112,7 @@ else:
 #           ('R50/CASIA-Webface_merge_MS1MV3_subj_similarity=[40,49]',   'r50', '/home/bjgbiesseck/GitHub/bjgbiesseck_insightface/recognition/arcface_torch/work_dirs/casiawebface_merge_MS1MV3_subj_similarity=[40,49]_r50/2025-11-09_22-58-35_GPU0/model.pt')
 #           ]
 
-models = [('R50/CASIA-Webface_merge_Synth_110subj_Arc2Face_similarity=[60,69]',  'r50', '/home/bjgbiesseck/GitHub/bjgbiesseck_insightface/recognition/arcface_torch/work_dirs/casiawebface_merge_Synth_110subj_Arc2Face_similarity=[60,69]_r50/2026-02-20_09-01-45_GPU0/model.pt')
+models = [('R50/CASIA-Webface_merge_Synth_110subj_Arc2Face_similarity=[60,69]_KNN',  'r50', '/home/bjgbiesseck/GitHub/bjgbiesseck_insightface/recognition/arcface_torch/work_dirs/casiawebface_merge_Synth_110subj_Arc2Face_KNNBased_k=3_similarity=[60,69]_r50/2026-02-24_11-44-32_GPU0/model.pt')
           ]
 
 
@@ -185,6 +186,7 @@ results = {}
 for idx_tgt, (target, arguments) in enumerate(benchmarks):
     results[target] = {}
     for idx_model, (model_name, network, model_path) in enumerate(models):
+        start_time_model = time.time()
         print(f'target={idx_tgt}/{len(benchmarks)}, model={idx_model}/{len(models)} - target: {target}, model_name: {model_name}')
             
         if args.type == 'summary':
@@ -235,6 +237,9 @@ for idx_tgt, (target, arguments) in enumerate(benchmarks):
         # print('parsed_results:')
         # print(parsed_results)
 
+        end_time_model = time.time()
+        exec_time_model = end_time_model-start_time_model
+        print(f'    Model execution time: {exec_time_model:.3f}sec  {exec_time_model/60:.3f}min  {exec_time_model/3600:.3f}hour')
         print('-----')
     print('===================')
 

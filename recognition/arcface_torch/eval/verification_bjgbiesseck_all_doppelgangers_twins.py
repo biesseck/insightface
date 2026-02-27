@@ -112,7 +112,8 @@ else:
 #           ('R50/CASIA-Webface_merge_MS1MV3_subj_similarity=[40,49]',   'r50', '/home/bjgbiesseck/GitHub/bjgbiesseck_insightface/recognition/arcface_torch/work_dirs/casiawebface_merge_MS1MV3_subj_similarity=[40,49]_r50/2025-11-09_22-58-35_GPU0/model.pt')
 #           ]
 
-models = [('R50/CASIA-Webface_merge_Synth_110subj_Arc2Face_similarity=[60,69]_KNN',  'r50', '/home/bjgbiesseck/GitHub/bjgbiesseck_insightface/recognition/arcface_torch/work_dirs/casiawebface_merge_Synth_110subj_Arc2Face_KNNBased_k=3_similarity=[60,69]_r50/2026-02-24_11-44-32_GPU0/model.pt')
+models = [('R50/CASIA-Webface_merge_Synth_1000subj_Arc2Face_similarity=[60,69]_KNN',  'r50', '/home/bjgbiesseck/GitHub/bjgbiesseck_insightface/recognition/arcface_torch/work_dirs/casiawebface_merge_Synth_1000subj_Arc2Face_similarity=[60,69]_r50/2026-02-26_16-31-31_GPU0/model.pt'),
+          ('R50/CASIA-Webface_merge_Synth_1000subj_Arc2Face_similarity=[50,59]_KNN',  'r50', '/home/bjgbiesseck/GitHub/bjgbiesseck_insightface/recognition/arcface_torch/work_dirs/casiawebface_merge_Synth_1000subj_Arc2Face_KNNBased_k=3_similarity=[50,59]_r50/2026-02-27_01-48-59_GPU0/model.pt')
           ]
 
 

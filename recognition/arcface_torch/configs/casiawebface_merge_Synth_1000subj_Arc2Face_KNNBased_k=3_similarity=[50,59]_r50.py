@@ -16,11 +16,8 @@ config.sample_rate = 1.0
 config.fp16 = True
 config.momentum = 0.9
 config.weight_decay = 5e-4
-config.batch_size = 16
-# config.batch_size = 32
-# config.batch_size = 64
 # config.batch_size = 128
-# config.batch_size = 256
+config.batch_size = 256
 config.lr = 0.1
 config.verbose = 2000
 # config.verbose = 10
@@ -44,7 +41,7 @@ if uname.nodename == 'duo':
 
     config.val_targets = ['/nobackup3/bjgbiesseck/CASIA-Webface/faces_webface_112x112/lfw.bin', '/nobackup3/bjgbiesseck/CASIA-Webface/faces_webface_112x112/cfp_fp.bin', '/nobackup3/bjgbiesseck/CASIA-Webface/faces_webface_112x112/agedb_30.bin']
     
-    config.path_other_dataset = '/nobackup3/bjgbiesseck/CASIA-Webface/imgs_crops_112x112_FACE_EMBEDDINGS_newSynthIDs_Arc2Face_sim=[0.6,0.69]_1000ids_KNN_BASED/imgs_steps=15_DETECTED_FACES_RETINAFACE_scales=[1.0]_nms=0.4/imgs'
+    config.path_other_dataset = '/nobackup3/bjgbiesseck/CASIA-Webface/imgs_crops_112x112_FACE_EMBEDDINGS_R100_WebFace42M_ArcFace_newSynthIDs_Arc2Face_sim=[0.5,0.59]_1000ids_KNN_BASED/k=3/imgs_steps=25_DETECTED_FACES_RETINAFACE_scales=[1.0]_nms=0.4/imgs'
 
 
 

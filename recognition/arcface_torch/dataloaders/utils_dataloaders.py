@@ -1,5 +1,6 @@
 import os, sys
 import glob
+import re
 
 
 def load_file_protocol(file_path):
@@ -21,6 +22,16 @@ def load_file_protocol(file_path):
         return protocol_data
 
 
+def natural_sort(strings):
+    def convert(text):
+        return int(text) if text.isdigit() else text.lower()
+    
+    def alphanum_key(key):
+        return [convert(c) for c in re.split(r'(\d+)', key)]
+    
+    return sorted(strings, key=alphanum_key)
+
+
 def find_files(directory, extension, sort=True):
     matching_files = []
 
@@ -31,7 +42,8 @@ def find_files(directory, extension, sort=True):
                     matching_files.append(os.path.join(root, file))
     search_recursively(directory)
     if sort:
-        matching_files.sort()
+        # matching_files.sort()
+        matching_files = natural_sort(matching_files)
     return matching_files
 
 

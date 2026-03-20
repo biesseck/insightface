@@ -143,6 +143,21 @@ def get_dataloader_doppelganger(
 
                 train_set = merge_dataloaders_doppelganger(train_set, other_train_set)
 
+    # # TESTS [TO DELETE]
+    # # train_set.final_samples_list
+    # print('\n======================')
+    # for idx_sample, sample in enumerate(train_set.final_samples_list):
+    #     datasetname, path_img, class_label, doppel_label, _, _ = sample
+    #     if doppel_label != -1:
+    #         print(f"{idx_sample}/{len(train_set.final_samples_list)}", sample)
+    #         for idx_doppel, doppel_sample in enumerate(train_set.final_samples_list):
+    #             if doppel_sample[2] == doppel_label:
+    #                 print(f"{idx_doppel}/{len(train_set.final_samples_list)}", doppel_sample)
+    #                 break
+    #         print('--------')
+    # sys.exit(0)
+    # # TESTS [TO DELETE]
+
 
     # DALI
     if dali:

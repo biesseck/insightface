@@ -23,7 +23,7 @@ config.verbose = 2000
 # config.verbose = 10
 config.dali = False
 
-config.margin_doppel = 0.5
+config.margin_doppel = 0.25
 
 
 

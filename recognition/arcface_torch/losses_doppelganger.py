@@ -48,7 +48,7 @@ class CombinedMarginLossDoppelgangerTwins(torch.nn.Module):
         #     d_idx = doppel_indices[valid_mask]
         #
         #     logits[b_idx, d_idx] += self.m_doppel
-        if doppel_indices is not None and self.m_doppel > 0:
+        if doppel_indices is not None and self.m_doppel != 0:
             valid_mask = doppel_indices != -1
             b_idx = torch.arange(logits.size(0), device=logits.device)[valid_mask]
             d_idx = doppel_indices[valid_mask]

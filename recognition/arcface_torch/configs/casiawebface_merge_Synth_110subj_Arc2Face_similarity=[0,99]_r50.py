@@ -16,21 +16,13 @@ config.sample_rate = 1.0
 config.fp16 = True
 config.momentum = 0.9
 config.weight_decay = 5e-4
-config.batch_size = 128
-# config.batch_size = 256
+# config.batch_size = 128
+config.batch_size = 256
 config.lr = 0.1
 config.verbose = 2000
-# config.verbose = 20
+# config.verbose = 10
 config.dali = False
 
-# config.margin_doppel = 0.0
-# config.margin_doppel = 0.25
-# config.margin_doppel = 0.5
-# config.margin_doppel = 0.75
-config.margin_doppel = -0.05
-# config.margin_doppel = -0.1
-# config.margin_doppel = -0.25
-# config.margin_doppel = -0.5
 
 
 
@@ -49,9 +41,7 @@ if uname.nodename == 'duo':
 
     config.val_targets = ['/nobackup3/bjgbiesseck/CASIA-Webface/faces_webface_112x112/lfw.bin', '/nobackup3/bjgbiesseck/CASIA-Webface/faces_webface_112x112/cfp_fp.bin', '/nobackup3/bjgbiesseck/CASIA-Webface/faces_webface_112x112/agedb_30.bin']
     
-    config.path_other_dataset = '/nobackup3/bjgbiesseck/CASIA-Webface/imgs_crops_112x112_FACE_EMBEDDINGS_R100_WebFace42M_ArcFace_newSynthIDs_Arc2Face_sim=[0.6,0.69]_1000ids_DETECTED_FACES_RETINAFACE_scales=[1.0]_nms=0.4/imgs'
-
-
+    config.path_other_dataset = '/nobackup3/bjgbiesseck/CASIA-Webface/imgs_crops_112x112_FACE_EMBEDDINGS_R100_WebFace42M_ArcFace_newSynthIDs_Arc2Face_sim=[0.0,0.99]_110ids_DETECTED_FACES_RETINAFACE_scales=[1.0]_nms=0.4/imgs_112x112'
 
 
 elif uname.nodename == 'diolkos':
@@ -69,8 +59,6 @@ elif uname.nodename == 'diolkos':
     config.path_subjs_list_to_merge = '/nobackup/unico/datasets/face_recognition/1_CASIA-WebFace/merge_with_dataset_MS-Celeb-1M-ms1m-retinaface-t1-imgs_FACE_EMBEDDINGS_sim-range=[0.5,0.69]/dict_paths_new_subjs_base_subjs.json'
 
 
-
-
 elif uname.nodename == 'cedro':
     config.rec = '/hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/CASIA-WebFace/imgs_crops_112x112'
 
@@ -81,8 +69,8 @@ elif uname.nodename == 'cedro':
     # config.val_dataset_dir = ['/nobackup/unico/frcsyn_wacv2024/datasets/real/3_BUPT-BalancedFace/race_per_7000_crops_112x112']
     # config.val_protocol_path = ['/nobackup/unico/frcsyn_wacv2024/comparison_files/comparison_files/sub-tasks_1.1_1.2/bupt_comparison.txt']
 
-    # config.path_other_dataset = '/hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/CASIA-WebFace/imgs_crops_112x112_FACE_EMBEDDINGS_newSynthIDs_Arc2Face_sim=[0.5,0.69]_DETECTED_FACES_RETINAFACE_scales=[1.0]_nms=0.4/imgs'
-    config.path_other_dataset = '/hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/CASIA-WebFace/imgs_crops_112x112_FACE_EMBEDDINGS_newSynthIDs_Arc2Face_sim=[0.6,0.69]_1000ids_DETECTED_FACES_RETINAFACE_scales=[1.0]_nms=0.4/imgs'
+
+    config.path_other_dataset = '/hddevice/nobackup3/bjgbiesseck/datasets/face_recognition/CASIA-WebFace/imgs_crops_112x112_FACE_EMBEDDINGS_newSynthIDs_Arc2Face_sim=[0.5,0.59]_137ids_DETECTED_FACES_RETINAFACE_scales=[1.0]_nms=0.4/imgs'
 
 
 else:
@@ -92,11 +80,10 @@ else:
 
 # config.num_classes = 85742
 config.num_classes = 10572
-# config.num_classes = 10572 + 5786    # not necessary anymore
 
 # config.num_image = 5822653
 config.num_image = 490623
-# config.num_image = 490623 + 518848   # not necessary anymore
+
 
 config.num_epoch = 20
 # config.num_epoch = 30

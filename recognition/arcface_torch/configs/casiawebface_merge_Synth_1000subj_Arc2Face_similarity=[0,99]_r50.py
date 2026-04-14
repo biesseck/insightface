@@ -27,10 +27,8 @@ config.dali = False
 # config.margin_doppel = 0.25
 # config.margin_doppel = 0.5
 # config.margin_doppel = 0.75
-config.margin_doppel = -0.05
-# config.margin_doppel = -0.1
 # config.margin_doppel = -0.25
-# config.margin_doppel = -0.5
+config.margin_doppel = -0.5
 
 
 
@@ -49,7 +47,7 @@ if uname.nodename == 'duo':
 
     config.val_targets = ['/nobackup3/bjgbiesseck/CASIA-Webface/faces_webface_112x112/lfw.bin', '/nobackup3/bjgbiesseck/CASIA-Webface/faces_webface_112x112/cfp_fp.bin', '/nobackup3/bjgbiesseck/CASIA-Webface/faces_webface_112x112/agedb_30.bin']
     
-    config.path_other_dataset = '/nobackup3/bjgbiesseck/CASIA-Webface/imgs_crops_112x112_FACE_EMBEDDINGS_R100_WebFace42M_ArcFace_newSynthIDs_Arc2Face_sim=[0.6,0.69]_1000ids_DETECTED_FACES_RETINAFACE_scales=[1.0]_nms=0.4/imgs'
+    config.path_other_dataset = '/nobackup3/bjgbiesseck/CASIA-Webface/imgs_crops_112x112_FACE_EMBEDDINGS_R100_WebFace42M_ArcFace_newSynthIDs_Arc2Face_sim=[0.0,0.99]_1000ids_DETECTED_FACES_RETINAFACE_scales=[1.0]_nms=0.4/imgs_112x112'
 
 
 

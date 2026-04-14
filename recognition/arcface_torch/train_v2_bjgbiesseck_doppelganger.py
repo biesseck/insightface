@@ -6,6 +6,7 @@ from datetime import datetime
 import random
 import numpy as np
 import torch
+from torchvision.utils import save_image
 from backbones import get_model
 # from dataset import get_dataloader
 # from dataset_bjgbiesseck import get_dataloader
@@ -15,6 +16,7 @@ from losses_doppelganger import CombinedMarginLossDoppelgangerTwins
 from lr_scheduler import PolyScheduler
 from partial_fc_v2 import PartialFC_V2
 from partial_fc_v2_doppelganger import PartialFC_V2_Doppelganger
+import torch.nn.functional as F
 from torch import distributed
 from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
@@ -43,6 +45,108 @@ except KeyError:
         rank=rank,
         world_size=world_size,
     )
+
+
+def save_imgs_batch(imgs, local_labels, doppel_idxs, global_step, cfg):
+    imgs = ((imgs*0.5)+0.5)*255.
+    for idx_img, (img, label, doppel_idx) in enumerate(zip(imgs, local_labels, doppel_idxs)):
+        id_folder = os.path.join(cfg.output, f'imgs_train_global_step={global_step}', f'{int(label)}_doppel-idx={int(doppel_idx)}')
+        os.makedirs(id_folder, exist_ok=True)
+        img_path = os.path.join(id_folder, f'img_label={int(label)}_doppel-idx={int(doppel_idx)}_idx={idx_img}.png')
+        save_image(img, img_path, normalize=True)
+
+
+
+def analyze_doppelgangers_similarities(cfg, global_step, backbone, train_loader, writer: SummaryWriter):
+    if global_step > 0:
+        backbone.eval()
+        device = backbone.device
+        num_total_image = train_loader.dataset.num_image
+        num_valid_image = num_total_image - int(num_total_image % cfg.batch_size)
+        num_classes = train_loader.dataset.num_classes
+        all_embeddings  = torch.zeros((num_valid_image, 512), dtype=torch.float32, device=device)
+        all_labels      = torch.zeros(num_valid_image, dtype=torch.long, device=device)
+        all_doppel_idxs = torch.zeros(num_valid_image, dtype=torch.long, device=device)
+        global_idx_sample = 0
+        with torch.no_grad():
+            for idx_train_batch, train_batch in enumerate(train_loader):
+                # print(f"{idx_train_batch}/{len(train_loader)} - Analysing doppelgangers similarities", end='\r')
+                if len(train_batch) == 2:
+                    img, local_labels = train_batch
+                elif len(train_batch) == 5:
+                    img, local_labels, doppel_idxs, race_label, gender_label = train_batch
+                    embeddings = backbone(img)
+                    batch_size = len(embeddings)
+                    all_embeddings[global_idx_sample:global_idx_sample+batch_size,:] = embeddings
+                    all_labels[global_idx_sample:global_idx_sample+batch_size]       = local_labels
+                    all_doppel_idxs[global_idx_sample:global_idx_sample+batch_size]  = doppel_idxs
+                    global_idx_sample += batch_size
+                    print(f"{idx_train_batch}/{len(train_loader)} - Analysing doppelgangers similarities    img.shape: {img.shape}    embeddings.shape: {embeddings.shape}    local_labels.shape: {local_labels.shape}    doppel_idxs.shape: {doppel_idxs.shape}", end='\r')
+
+                    # idx_samples_having_doppelgangers = torch.where(doppel_idxs != -1)[0]
+                    # if len(idx_samples_having_doppelgangers) > 0:
+                    #     img_having_doppelgangers          = img[idx_samples_having_doppelgangers]
+                    #     local_labels_having_doppelgangers = local_labels[idx_samples_having_doppelgangers]
+                    #     doppel_idxs_having_doppelgangers  = doppel_idxs[idx_samples_having_doppelgangers]
+                    #     local_embeddings_having_doppelgangers = backbone(img_having_doppelgangers)
+                    #     print(f"{idx_train_batch}/{len(train_loader)} - Analysing doppelgangers similarities    img_having_doppelgangers.shape: {img_having_doppelgangers.shape}    local_labels_having_doppelgangers.shape: {local_labels_having_doppelgangers.shape}    doppel_idxs_having_doppelgangers.shape: {doppel_idxs_having_doppelgangers.shape}", end='\r')
+            
+                    # print('\nSaving imgs batch')
+                    # save_imgs_batch(img, local_labels, doppel_idxs, global_step, cfg)
+                    # sys.exit(0)
+            print()
+        
+        all_ids_embeddings = torch.zeros((train_loader.dataset.num_classes, 512), dtype=torch.float32, device=device)
+        all_ids_embeddings.index_add_(0, all_labels, all_embeddings)
+        all_labels_cpu = all_labels.detach().cpu()
+        class_counts = torch.bincount(all_labels, minlength=num_classes).unsqueeze(1).to(torch.float32)
+        # print('class_counts:', class_counts)
+        all_ids_embeddings = all_ids_embeddings / torch.clamp(class_counts, min=1e-9)
+        all_ids_embeddings = F.normalize(all_ids_embeddings, p=2, dim=1)
+
+        # compute all similarities
+        class_sim_matrix = torch.mm(all_ids_embeddings, all_ids_embeddings.t())
+        num_classes = all_ids_embeddings.shape[0]
+        row_idx, col_idx = torch.triu_indices(num_classes, num_classes, offset=1, device=device)
+        unique_class_similarities = class_sim_matrix[row_idx, col_idx]
+
+        # compute doppelganger similarities
+        pairs_stacked = torch.stack([all_labels, all_doppel_idxs], dim=1)
+        unique_pairs = torch.unique(pairs_stacked, dim=0)
+        mask = unique_pairs[:, 0] != unique_pairs[:, 1]
+        unique_pairs = unique_pairs[mask]
+        unique_pairs_sorted = torch.sort(unique_pairs, dim=1)[0]
+        unique_doppel_pairs = torch.unique(unique_pairs_sorted, dim=0)
+        id_a_indices = unique_doppel_pairs[:, 0]
+        id_b_indices = unique_doppel_pairs[:, 1]
+        embeddings_a = all_ids_embeddings[id_a_indices]
+        embeddings_b = all_ids_embeddings[id_b_indices]
+        doppel_similarities = torch.sum(embeddings_a * embeddings_b, dim=1)
+
+        if writer is not None:
+            nbins = 20  # Increased to 40 to maintain resolution over the wider range
+            lower, higher = 0.0, 1.0
+            bins_edges = np.linspace(lower, higher, nbins+1)
+
+            print('Saving similarities histograms to tensorboard')
+            writer.add_histogram(
+                tag='Similarities/1_Interclass_All', 
+                values=unique_class_similarities, 
+                global_step=global_step,
+                bins=bins_edges
+            )
+            
+            writer.add_histogram(
+                tag='Similarities/2_Doppelgangers_Only', 
+                values=doppel_similarities, 
+                global_step=global_step,
+                bins=bins_edges
+            )
+            
+            writer.flush()
+
+        backbone.train()
+        # sys.exit(0)
 
 
 def main(args):
@@ -250,6 +354,7 @@ def main(args):
 
                 if global_step % cfg.verbose == 0 and global_step > 0:
                     callback_verification(global_step, backbone)
+                    analyze_doppelgangers_similarities(cfg, global_step, backbone, train_loader, summary_writer)
 
         if cfg.save_all_states:
             checkpoint = {

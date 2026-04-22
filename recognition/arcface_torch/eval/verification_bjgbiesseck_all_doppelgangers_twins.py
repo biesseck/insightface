@@ -112,9 +112,13 @@ else:
 #           ('R50/CASIA-Webface_merge_MS1MV3_subj_similarity=[40,49]',   'r50', '/home/bjgbiesseck/GitHub/bjgbiesseck_insightface/recognition/arcface_torch/work_dirs/casiawebface_merge_MS1MV3_subj_similarity=[40,49]_r50/2025-11-09_22-58-35_GPU0/model.pt')
 #           ]
 
-models = [('R50/CASIA-Webface_merge_Synth_1000subj_Arc2Face_similarity=[00,99]',   'r50', '/home/bjgbiesseck/GitHub/bjgbiesseck_insightface/recognition/arcface_torch/work_dirs/casiawebface_merge_Synth_1000subj_Arc2Face_similarity=[0,99]_r50/2026-04-10_01-49-36_GPU0/model.pt'),
-          ('R50/CASIA-Webface_merge_Synth_110subj_Arc2Face_similarity=[00,99]',    'r50', '/home/bjgbiesseck/GitHub/bjgbiesseck_insightface/recognition/arcface_torch/work_dirs/casiawebface_merge_Synth_110subj_Arc2Face_similarity=[0,99]_r50/2026-04-10_02-59-22_GPU0/model.pt')
-          ]
+models = [('R50/casiawebface_merge_Glint360k_subj_similarity=[40,49]_r50',  'r50', '/home/bjgbiesseck/GitHub/bjgbiesseck_insightface/recognition/arcface_torch/work_dirs/casiawebface_merge_Glint360k_subj_similarity=[40,49]_r50/2026-04-18_08-38-48_GPU0/model.pt'),
+          ('R50/casiawebface_merge_Glint360k_subj_similarity=[50,69]_r50',  'r50', '/home/bjgbiesseck/GitHub/bjgbiesseck_insightface/recognition/arcface_torch/work_dirs/casiawebface_merge_Glint360k_subj_similarity=[50,69]_r50/2026-04-18_19-44-58_GPU0/model.pt'),
+          ('R50/casiawebface_merge_Glint360k_subj_similarity=[70,100]_r50', 'r50', '/home/bjgbiesseck/GitHub/bjgbiesseck_insightface/recognition/arcface_torch/work_dirs/casiawebface_merge_Glint360k_subj_similarity=[70,100]_r50/2026-04-18_23-30-07_GPU0/model.pt'),
+          ('R50/casiawebface_merge_Webface4M_subj_similarity=[40,49]_r50',  'r50', '/home/bjgbiesseck/GitHub/bjgbiesseck_insightface/recognition/arcface_torch/work_dirs/casiawebface_merge_Webface4M_subj_similarity=[40,49]_r50/2026-04-17_17-42-18_GPU0/model.pt'),
+          ('R50/casiawebface_merge_Webface4M_subj_similarity=[50,69]_r50',  'r50', '/home/bjgbiesseck/GitHub/bjgbiesseck_insightface/recognition/arcface_torch/work_dirs/casiawebface_merge_Webface4M_subj_similarity=[50,69]_r50/2026-04-17_17-39-36_GPU0/model.pt'),
+          ('R50/casiawebface_merge_Webface4M_subj_similarity=[70,100]_r50', 'r50', '/home/bjgbiesseck/GitHub/bjgbiesseck_insightface/recognition/arcface_torch/work_dirs/casiawebface_merge_Webface4M_subj_similarity=[70,100]_r50/2026-04-17_22-09-06_GPU0/model.pt'),
+         ]
 
 
 

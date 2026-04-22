@@ -53,7 +53,7 @@ def load_json(path):
     return data
 
 
-def get_subjs_dirs_paths_from_json(dict_subjs_json={}, split_str='_FACE_EMBEDDINGS/', index_subj=-2):
+def get_subjs_dirs_paths_from_json(dict_subjs_json={}, split_str='_FACE_EMBEDDINGS_R100_WebFace42M_ArcFace/', index_subj=-2):
     subjs_embedds_paths = list(dict_subjs_json.keys())
     for i in range(len(subjs_embedds_paths)):
         dataset = subjs_embedds_paths[i].split(split_str)[0]

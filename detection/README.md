@@ -1,5 +1,7 @@
 # Face Detection with RetinaFace
 
+<img src="face_detection_alignment_illustration.png" width="700" />
+
 ### Main requirements
 - Python 3.9
 - CUDA 11.2

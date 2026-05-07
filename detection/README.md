@@ -13,6 +13,7 @@ ENV=retinaface_insightface_py39
 conda create --name $ENV python=3.9 -y
 conda activate $ENV
 pip3 install -r requirements.txt
+git update-index --assume-unchanged retinaface/rcnn/pycocotools/_mask.c
 ```
 
 ### Compile RCNN
@@ -26,7 +27,7 @@ make
 - Save file [retinaface-R50.zip](https://drive.google.com/file/d/1_DKgGxQWqlTqe78pw0KavId9BIMNUWfu/view?usp=sharing) to folder `retinaface/model`
 ```
 mkdir model; cd model
-gdown 1_DKgGxQWqlTqe78pw0KavId9BIMNUWfu    # if you have SSL Certificate Error use 'gdown 1_DKgGxQWqlTqe78pw0KavId9BIMNUWfu --no-check-certificate'
+gdown 1_DKgGxQWqlTqe78pw0KavId9BIMNUWfu    # if you get any SSL Certificate Error use 'gdown 1_DKgGxQWqlTqe78pw0KavId9BIMNUWfu --no-check-certificate'
 unzip retinaface-R50.zip -d retinaface-R50
 cd ../..    # come back to folder 'insightface/detection'
 ```

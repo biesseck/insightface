@@ -10,7 +10,7 @@ git clone https://github.com/biesseck/insightface.git
 cd insightface/detection
 
 ENV=retinaface_insightface_py39
-conda env create -y --name $ENV --file environment.yml
+conda create --name $ENV python=3.9 -y
 conda activate $ENV
 pip3 install -r requirements.txt
 ```
@@ -25,22 +25,29 @@ make
 
 - Save file [retinaface-R50.zip](https://drive.google.com/file/d/1_DKgGxQWqlTqe78pw0KavId9BIMNUWfu/view?usp=sharing) to folder `retinaface/model`
 ```
-cd retinaface/model
-unzip retinaface/model/retinaface-R50.zip -d retinaface/model/retinaface-R50
+mkdir model; cd model
+gdown 1_DKgGxQWqlTqe78pw0KavId9BIMNUWfu    # if you have SSL Certificate Error use 'gdown 1_DKgGxQWqlTqe78pw0KavId9BIMNUWfu --no-check-certificate'
+unzip retinaface-R50.zip -d retinaface-R50
+cd ../..    # come back to folder 'insightface/detection'
 ```
 
 ### Run face detection script
 ```
 python detect_crop_faces_retinaface.py --input_path /path/to/dataset/root/folder --align_face --save_crops --process_only_biggest_face
 ```
-- The following directory will be created:
+- The following directory will be created with the same structure as '/path/to/dataset/root/folder':
   ```
   ├─ /path/to/dataset/root/folder
-      ├─ subdir0
-          ├─ validation_images_DETECTED_FACES_RETINAFACE_scales=[1.0]
-              ├─ imgs
-              ├─ txt
-              ├─ files_no_face_detected_thresh=0.01_starttime=2024-03-26_22-21-07.txt
+  ├─ /path/to/dataset/root/folder_DETECTED_FACES_RETINAFACE_scales=[0.5]_thresh=0.5_nms=0.4
+        ├─ imgs_112x112
+            ├─ subdir0
+            |    ├─ img0.png
+            |    ├─ img1.png
+            |    ├─ img2.png
+            ├─ subdir1
+            |    ├─ img3.png
+            |    ├─ img4.png
+            |    ├─ img5.png
   
   ```
 

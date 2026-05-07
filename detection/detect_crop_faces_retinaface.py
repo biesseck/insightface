@@ -19,14 +19,14 @@ import rawpy
 def getArgs():
     parser = argparse.ArgumentParser()
     parser.add_argument('--file_list', type=str, default='', help='')
-    parser.add_argument('--input_path', type=str, default='/datasets2/3rd_OpensetFDIC_IJCB2024/validation_images', help='the dir your dataset of face which need to crop')
+    parser.add_argument('--input_path', type=str, default='/path/to/dataset/root/folder', help='the dir your dataset of face which need to crop')
     parser.add_argument('--input_ext', type=str, default='jpg,png,jpeg,nef', help='jpg or png or jpeg or nef or jpg,png or jpg,png,jpeg')
     parser.add_argument('--output_path', type=str, default='', help='the dir the cropped faces of your dataset where to save')
     parser.add_argument('--gpu', default=-1, type=int, help='gpu id， when the id == -1, use cpu')
     parser.add_argument('--face_size', type=int, default=112, help='the size of the face to save, the size x%2==0, and width equal height')
-    parser.add_argument('--thresh', type=float, default=0.9, help='threshold for face detection')
+    parser.add_argument('--thresh', type=float, default=0.5, help='threshold for face detection')
     parser.add_argument('--nms', type=float, default=0.4, help='Non-Maximum Suppression')
-    parser.add_argument('--scales', type=str, default='[1.0]', help='the scale to resize image before detecting face')
+    parser.add_argument('--scales', type=str, default='[0.5]', help='the scale to resize image before detecting face')
     parser.add_argument('--draw_bbox_lmk_save_whole_img', action='store_true', help='')
     parser.add_argument('--save_crops', action='store_true', help='')
     parser.add_argument('--process_only_biggest_face', action='store_true', help='')
@@ -210,6 +210,7 @@ def crop_align_face(args):
     if output_dir == '':
         output_dir = input_dir + '_DETECTED_FACES_RETINAFACE'
     output_dir += f"_scales={str(args.scales).replace(' ','')}"
+    output_dir += f"_thresh={args.thresh}"
     output_dir += f"_nms={args.nms}"
     os.makedirs(output_dir, exist_ok=True)
 

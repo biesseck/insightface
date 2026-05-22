@@ -39,7 +39,7 @@ if uname.nodename == 'duo':
     # config.val_dataset_dir = ['/datasets2/frcsyn_wacv2024/datasets/real/3_BUPT-BalancedFace/race_per_7000_crops_112x112']
     # config.val_protocol_path = ['/datasets2/frcsyn_wacv2024/comparison_files/comparison_files/sub-tasks_1.1_1.2/bupt_comparison.txt']
 
-    config.path_subjs_list_to_merge = '/nobackup3/bjgbiesseck/CASIA-WebFace/merge_with_dataset_glint360k-glint360k-imgs_FACE_EMBEDDINGS_sim-range=[0.4,0.49]_EXCLUSIVE/dict_paths_new_subjs_base_subjs.json'
+    config.path_subjs_list_to_merge = '/nobackup3/bjgbiesseck/CASIA-Webface/merge_with_dataset_glint360k-glint360k-imgs_FACE_EMBEDDINGS_R100_WebFace42M_ArcFace_sim-range=[0.4,0.49]_EXCLUSIVE/dict_paths_new_subjs_base_subjs.json'
 
 
 elif uname.nodename == 'diolkos':

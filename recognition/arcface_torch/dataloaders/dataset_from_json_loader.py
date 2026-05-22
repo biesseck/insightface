@@ -102,7 +102,8 @@ class DataFromJSON_loader(Dataset):
 
         self.dict_subjs_json = load_json(root_dir)
         # print('self.dict_subjs_json:', self.dict_subjs_json)
-        self.list_subjs_dirs_paths = get_subjs_dirs_paths_from_json(self.dict_subjs_json)
+        split_str = '_FACE_EMBEDDINGS/' if '_FACE_EMBEDDINGS/' in list(self.dict_subjs_json.keys())[0] else '_FACE_EMBEDDINGS_R100_WebFace42M_ArcFace/'
+        self.list_subjs_dirs_paths = get_subjs_dirs_paths_from_json(self.dict_subjs_json, split_str)
 
         # self.path_files = ud.find_files(self.root_dir, self.file_ext)
         self.path_files = get_subjs_paths_files(self.list_subjs_dirs_paths)

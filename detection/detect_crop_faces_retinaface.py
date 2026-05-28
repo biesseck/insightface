@@ -268,7 +268,7 @@ def crop_align_face(args):
         for x, img_path in enumerate(img_paths_part):
             if args.str_end in img_path:
                 end_index_str = x+1
-                print('found at', begin_index_str)
+                print('found at', end_index_str)
                 break
     
     print('\n------------------------')

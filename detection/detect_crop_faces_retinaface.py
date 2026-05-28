@@ -291,7 +291,12 @@ def crop_align_face(args):
             face_img = cv2.cvtColor(face_img, cv2.COLOR_BGR2RGB)
         else:
             face_img = cv2.imread(input_path_path)
+        
         if face_img is None:  # empty image was read
+            add_string_end_file(path_file_no_face_detected, input_path_path)
+            count_no_find_face += 1
+            print('    Skipping empty image!')
+            print('-------------')
             continue
 
         print(f'Detecting face...')

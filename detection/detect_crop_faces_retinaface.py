@@ -284,13 +284,15 @@ def crop_align_face(args):
         print(f'  end_parts: {end_parts}')
 
         print(f'Img {i+1}/{len(img_paths_part)} - Reading {input_path_path} ...')
-        # face_img = cv2.imread(input_path_path)
+        
         if input_path_path.endswith('.nef'):
             raw_img = rawpy.imread(input_path_path)
             face_img = raw_img.postprocess()
             face_img = cv2.cvtColor(face_img, cv2.COLOR_BGR2RGB)
         else:
             face_img = cv2.imread(input_path_path)
+        if face_img is None:  # empty image was read
+            continue
 
         print(f'Detecting face...')
         ret = detector.detect(face_img, args.thresh, args.scales, do_flip=False)

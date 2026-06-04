@@ -372,7 +372,7 @@ def crop_align_face(args):
 
         # SAVE DETECTIONS AS TXT FILE
         output_txt_name = input_path_path.split('/')[-1].replace(os.path.splitext(input_path_path)[1], '.txt')
-        output_dir_txt = os.path.join(output_txt, input_path_path.split('/')[-2])
+        output_dir_txt = os.path.join(output_txt, os.path.dirname(input_path_path).replace(input_dir,'').lstrip('/'))
         os.makedirs(output_dir_txt, exist_ok=True)
         output_txt_path = os.path.join(output_dir_txt, output_txt_name)
         img_file_name = input_path_path.split('/')[-1]

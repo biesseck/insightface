@@ -11,6 +11,7 @@ from tqdm import tqdm
 import argparse
 import ast
 import cv2
+import glob
 from retinaface.retinaface import RetinaFace
 from insightface.utils import face_align
 import rawpy
@@ -32,6 +33,7 @@ def getArgs():
     parser.add_argument('--process_only_biggest_face', action='store_true', help='')
     parser.add_argument('--align_face', action='store_true', help='')
     parser.add_argument('--force_lmk', action='store_true', help='')
+    parser.add_argument('--dont_replace_existing_files', action='store_true', help='')
 
     parser.add_argument('--str_begin', default='', type=str, help='Substring to find and start processing')
     parser.add_argument('--str_end', default='', type=str, help='Substring to find and stop processing')
@@ -279,12 +281,23 @@ def crop_align_face(args):
     img_paths_part = img_paths_part[begin_index_str:end_index_str]
     for i, input_path_path in enumerate(img_paths_part):
         start_time = time.time()
+        print('------------------------')
         print(f'divs: {args.div}    part: {args.part}    files: {len(img_paths_part)}')
         print(f'begin_parts: {begin_parts}')
         print(f'  end_parts: {end_parts}')
 
         print(f'Img {i+1}/{len(img_paths_part)} - Reading {input_path_path} ...')
         
+        output_path_path = input_path_path.replace(input_dir, output_imgs)
+
+        if args.dont_replace_existing_files:
+            output_path_pattern = f"{os.path.splitext(output_path_path)[0]}*".replace('[','*')
+            faces_files_already_detected = glob.glob(output_path_pattern)
+            if len(faces_files_already_detected) > 0:
+                print('    Skipping image, results already exist!')
+                continue
+        # sys.exit(0)
+
         if input_path_path.endswith('.nef'):
             raw_img = rawpy.imread(input_path_path)
             face_img = raw_img.postprocess()
@@ -296,7 +309,6 @@ def crop_align_face(args):
             add_string_end_file(path_file_no_face_detected, input_path_path)
             count_no_find_face += 1
             print('    Skipping empty image!')
-            print('-------------')
             continue
 
         print(f'Detecting face...')
@@ -316,7 +328,6 @@ def crop_align_face(args):
             else:
                 elapsed_time = time.time() - start_time
                 print(f'Elapsed time: {elapsed_time} seconds')
-                print('-------------')
                 continue
 
         confidences = [bbox[idx, 4] for idx in range(bbox.shape[0])]
@@ -339,7 +350,7 @@ def crop_align_face(args):
                 face = crop_resize_face(face_img, bbox_, args.face_size)
 
             # face_name = '%s.png'%(file_name.split('.')[0])
-            output_path_path = input_path_path.replace(input_dir, output_imgs)
+            # output_path_path = input_path_path.replace(input_dir, output_imgs)
             face_name = os.path.splitext(output_path_path.split('/')[-1])[0] + \
                         f'_bbox{str(bbox_idx).zfill(2)}' + \
                         f'_conf{conf_}' + '.png'
@@ -373,7 +384,6 @@ def crop_align_face(args):
         elapsed_time = time.time() - start_time
         print(f'Elapsed time: {elapsed_time} seconds')
         print(f'{count_no_find_face} images without faces (paths saved in \'{path_file_no_face_detected}\')')
-        print('-------------')
 
         count_crop_images += 1
 

@@ -287,7 +287,7 @@ def crop_align_face(args):
         print(f'  end_parts: {end_parts}')
 
         print(f'Img {i+1}/{len(img_paths_part)} - Reading {input_path_path} ...')
-        
+
         output_path_path = input_path_path.replace(input_dir, output_imgs)
 
         if args.dont_replace_existing_files:
@@ -350,7 +350,7 @@ def crop_align_face(args):
                 face = crop_resize_face(face_img, bbox_, args.face_size)
 
             # face_name = '%s.png'%(file_name.split('.')[0])
-            # output_path_path = input_path_path.replace(input_dir, output_imgs)
+            output_path_path = input_path_path.replace(input_dir, output_imgs)
             face_name = os.path.splitext(output_path_path.split('/')[-1])[0] + \
                         f'_bbox{str(bbox_idx).zfill(2)}' + \
                         f'_conf{conf_}' + '.png'

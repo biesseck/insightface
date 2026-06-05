@@ -176,13 +176,16 @@ def save_detections_txt(detections, saving_path):
         f.write("FILE,DETECTION_SCORE,BB_X,BB_Y,BB_WIDTH,BB_HEIGHT,REYE_X,REYE_Y,LEYE_X,LEYE_Y,NOSE_X,NOSE_Y,RMOUTH_X,RMOUTH_Y,LMOUTH_X,LMOUTH_Y\n")
         for image in sorted(detections.keys()):
             # for (score,bbox,lmark) in detections[image]:
-            for (scores,bboxes,lmarks) in detections[image]:
+            for (face_names,scores,bboxes,lmarks) in detections[image]:
                 for bbox_idx in range(len(bboxes)):
+                    face_name = face_names[bbox_idx]
                     score = scores[bbox_idx]
                     bbox = bboxes[bbox_idx]
                     lmark = lmarks[bbox_idx]
                     # f.write("%s,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f\n" % (image, score,
-                    f.write("%s,%3.20f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f\n" % (image, score,
+                    f.write("%s,%s,%3.20f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f\n" % (image,
+                                                                                        face_name,
+                                                                                        score,
                                                                                         bbox[0],bbox[1],bbox[2]-bbox[0],bbox[3]-bbox[1],
                                                                                         lmark[0][0],lmark[0][1],
                                                                                         lmark[1][0],lmark[1][1],
@@ -337,6 +340,7 @@ def crop_align_face(args):
             _bbox, _points = get_biggest_bbox(bbox, points)
             bbox, points = _bbox, _points
 
+        face_names = []
         face_img_copy = face_img.copy()
         for bbox_idx in range(bbox.shape[0]):
             bbox_ = bbox[bbox_idx, 0:4]
@@ -355,6 +359,7 @@ def crop_align_face(args):
                         f'_bbox{str(bbox_idx).zfill(2)}' + \
                         f'_conf{conf_}' + '.png'
             output_path_path = os.path.join(os.path.dirname(output_path_path), face_name)
+            face_names.append(face_name)
             os.makedirs(os.path.dirname(output_path_path), exist_ok=True)
 
             if args.draw_bbox_lmk_save_whole_img:
@@ -376,7 +381,8 @@ def crop_align_face(args):
         os.makedirs(output_dir_txt, exist_ok=True)
         output_txt_path = os.path.join(output_dir_txt, output_txt_name)
         img_file_name = input_path_path.split('/')[-1]
-        detections = {img_file_name: [(confidences, bbox, points)]}
+        # detections = {img_file_name: [(confidences, bbox, points)]}
+        detections = {img_file_name: [(face_names, confidences, bbox, points)]}
         print(f'Saving {output_txt_path} ...')
         save_detections_txt(detections, output_txt_path)
 

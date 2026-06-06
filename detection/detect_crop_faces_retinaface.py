@@ -15,6 +15,7 @@ import glob
 from retinaface.retinaface import RetinaFace
 from insightface.utils import face_align
 import rawpy
+import re
 
 
 def getArgs():
@@ -84,6 +85,14 @@ def draw_lmks(img, lmks):
     return result_img
 
 
+def natural_sort(path_list):
+    def convert(text):
+        return int(text) if text.isdigit() else text.lower()
+    def alphanum_key(path_obj):
+        return [convert(c) for c in re.split(r"(\d+)", str(path_obj))]
+    return sorted(path_list, key=alphanum_key)
+
+
 def get_all_files_in_path(folder_path, file_extension=['.jpg','.png'], pattern=''):
     file_list = []
     num_files_found = 0
@@ -96,7 +105,8 @@ def get_all_files_in_path(folder_path, file_extension=['.jpg','.png'], pattern='
                     num_files_found += 1
                     print(num_files_found, end='\r')
     print('')
-    file_list.sort()
+    # file_list.sort()
+    file_list = natural_sort(file_list)
     return file_list
 
 
@@ -107,7 +117,8 @@ def get_all_paths_from_file(file_path, pattern=''):
         for i, line in enumerate(all_lines):
             if pattern in line:
                 valid_lines.append(line)
-        valid_lines.sort()
+        # valid_lines.sort()
+        valid_lines = natural_sort(valid_lines)
         return valid_lines
 
 
